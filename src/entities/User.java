@@ -19,7 +19,7 @@ import app.App;
 public class User {
 	
 	@Id
-	private long dni;
+	private int dni;
 	
 	@Column(nullable = false)
 	private String name;
@@ -56,14 +56,14 @@ public class User {
 	/**
 	 * @return the dni
 	 */
-	public long getDni() {
+	public int getDni() {
 		return dni;
 	}
 	
 	/**
 	 * @param dni the dni to set
 	 */
-	public void setDni(long dni) {
+	public void setDni(int dni) {
 		this.dni = dni;
 	}
 	

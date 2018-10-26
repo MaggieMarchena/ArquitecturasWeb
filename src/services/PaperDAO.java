@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import entities.Paper;
+import entities.User;
 
 public class PaperDAO implements DAO<Paper,Integer>{
 	
@@ -54,15 +55,20 @@ public class PaperDAO implements DAO<Paper,Integer>{
 		return papers;
 	}
 
-//	@Override
-//	public boolean delete(Integer id) {
-//		throw new UnsupportedOperationException();
-//	}
-//
-//	@Override
-//	public Paper update(Integer id, Paper entity) {
-//		throw new UnsupportedOperationException();
-//	}
+
+	public Paper update(String name, Paper newEntityValues, EntityManager entityManager) {
+		Query query = entityManager.createNativeQuery("SELECT * FROM paper WHERE name= :name", Paper.class);
+		query.setParameter("name", name);
+		entityManager.getTransaction().commit();
+		Paper paper=(Paper)query.getSingleResult();
+		if (paper != null) {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newEntityValues);
+			entityManager.getTransaction().commit();
+			return paper;
+		}
+	return null;
+}
 
 	@Override
 	public Paper persist(Paper entity) {

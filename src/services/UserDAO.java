@@ -68,6 +68,13 @@ public class UserDAO implements DAO<User,Integer>{
 	}
 
 	public User update(Integer id, User newEntityValues, EntityManager entityManager) {
+		User user = entityManager.find(User.class, id);
+		if (user != null) {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newEntityValues);
+			entityManager.getTransaction().commit();
+			return user;
+		}
 		return null;
 	}
 
