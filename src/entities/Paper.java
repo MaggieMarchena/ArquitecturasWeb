@@ -21,22 +21,18 @@ public class Paper {
 	@Id
 	protected String name;
 	
-	@Column(nullable = false)
 	@OneToMany
 	protected List<Subject> keyWords;
 	
-	@Column(nullable = false)
 	@ManyToMany(mappedBy = "papersToEvaluate")
 	protected List<User> authors;
 	
-	@Column(nullable = false)
 	@ManyToMany(mappedBy = "papersToEvaluate")
 	protected List<User> evaluators;
 	
 	@Column(nullable = false)
 	protected boolean evaluated;
 	
-	@Column(nullable = false)
 	@OneToOne
 	protected Evaluation evaluation;
 	

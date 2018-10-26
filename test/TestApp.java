@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,22 +30,23 @@ import services.UserDAO;
 
 public class TestApp {
 	
-	private App app;
+	private static App app;
 	
-	private EntityManagerFactory emf;
+	private static EntityManagerFactory emf;
 	
-	private List<User> users;
-	private List<Paper> papers;
-	private List<Subject> subjects;
-	private List<Evaluation> evaluations;
+	private static List<User> users;
+	private static List<Paper> papers;
+	private static List<Subject> subjects;
+	private static List<Evaluation> evaluations;
 	
 	@BeforeClass
-	public void setEntityManeger() {
-		this.emf = Persistence.createEntityManagerFactory("TPE");
-		this.app = new App();
-		this.users = new ArrayList<>();
-		this.papers = new ArrayList<>();
-		this.evaluations = new ArrayList<>();
+	public static void openEntityManagerFactory() {
+		emf = Persistence.createEntityManagerFactory("TPE");
+		app = new App();
+		subjects = new ArrayList<>();
+		users = new ArrayList<>();
+		papers = new ArrayList<>();
+		evaluations = new ArrayList<>();
 	}
 	
 	@Test
@@ -98,27 +100,29 @@ public class TestApp {
 		subjects.add(s8);
 		
 		//test subject 5: "FrontEnd", expert = false
-		Subject testSubject = this.app.getSubjectByName(this.subjects.get(4).getName(), entityManager);
+		Subject testSubject = app.getSubjectByName(subjects.get(4).getName(), entityManager);
 		assertTrue(testSubject.getName().equals("FrontEnd"));
 		assertTrue(!testSubject.isExpert());
 		
 		entityManager.close();
 	}
 	
+	//Inciso b) Crear 10 usuarios
+	//Inciso d)i) Consulta de todos los datos de un autor/revisor
 	@Test
-	public void createEntitiesAndAssingRoles() {
+	public void createUsers() {
 		EntityManager entityManager = emf.createEntityManager();
 		
 		//Get Subjects
 		
-		Subject s1 = this.app.getSubjectByName(this.subjects.get(0).getName(), entityManager);
-		Subject s2 = this.app.getSubjectByName(this.subjects.get(1).getName(), entityManager);
-		Subject s3 = this.app.getSubjectByName(this.subjects.get(2).getName(), entityManager);
-		Subject s4 = this.app.getSubjectByName(this.subjects.get(3).getName(), entityManager);
-		Subject s5 = this.app.getSubjectByName(this.subjects.get(4).getName(), entityManager);
-		Subject s6 = this.app.getSubjectByName(this.subjects.get(5).getName(), entityManager);
-		Subject s7 = this.app.getSubjectByName(this.subjects.get(6).getName(), entityManager);
-		Subject s8 = this.app.getSubjectByName(this.subjects.get(7).getName(), entityManager);
+		Subject s1 = app.getSubjectByName(subjects.get(0).getName(), entityManager);
+		Subject s2 = app.getSubjectByName(subjects.get(1).getName(), entityManager);
+		Subject s3 = app.getSubjectByName(subjects.get(2).getName(), entityManager);
+		Subject s4 = app.getSubjectByName(subjects.get(3).getName(), entityManager);
+		Subject s5 = app.getSubjectByName(subjects.get(4).getName(), entityManager);
+		Subject s6 = app.getSubjectByName(subjects.get(5).getName(), entityManager);
+		Subject s7 = app.getSubjectByName(subjects.get(6).getName(), entityManager);
+		Subject s8 = app.getSubjectByName(subjects.get(7).getName(), entityManager);
 		
 		//Create Users and add known subjects
 		
@@ -221,7 +225,7 @@ public class TestApp {
 		users.add(u10);
 		
 		//Test u7: "Tyler, Steven", evaluator = true, workplace = "Aerosmith"
-		User testUser = this.app.getUserByDni(7, entityManager);
+		User testUser = app.getUserByDni(7, entityManager);
 		assertTrue(testUser.getName().equals("Tyler, Steven"));
 		assertTrue(testUser.isEvaluator());
 		assertTrue(testUser.getWorkPlace().equals("Aerosmith"));
@@ -229,29 +233,31 @@ public class TestApp {
 		entityManager.close();
 	}
 	
+	//Inciso c) Crear 10 trabajos de investigación
+	//Inciso e) Crear 10 trabajos de investigación
 	@Test
 	public void createPapers() {
 		EntityManager entityManager = emf.createEntityManager();
 		
 		//Get Subjects
 		
-		Subject s1 = this.app.getSubjectByName(this.subjects.get(0).getName(), entityManager);
-		Subject s2 = this.app.getSubjectByName(this.subjects.get(1).getName(), entityManager);
-		Subject s3 = this.app.getSubjectByName(this.subjects.get(2).getName(), entityManager);
-		Subject s4 = this.app.getSubjectByName(this.subjects.get(3).getName(), entityManager);
-		Subject s5 = this.app.getSubjectByName(this.subjects.get(4).getName(), entityManager);
-		Subject s7 = this.app.getSubjectByName(this.subjects.get(6).getName(), entityManager);
-		Subject s8 = this.app.getSubjectByName(this.subjects.get(7).getName(), entityManager);
+		Subject s1 = app.getSubjectByName(subjects.get(0).getName(), entityManager);
+		Subject s2 = app.getSubjectByName(subjects.get(1).getName(), entityManager);
+		Subject s3 = app.getSubjectByName(subjects.get(2).getName(), entityManager);
+		Subject s4 = app.getSubjectByName(subjects.get(3).getName(), entityManager);
+		Subject s5 = app.getSubjectByName(subjects.get(4).getName(), entityManager);
+		Subject s7 = app.getSubjectByName(subjects.get(6).getName(), entityManager);
+		Subject s8 = app.getSubjectByName(subjects.get(7).getName(), entityManager);
 		
 		//Get Users
-		User u1 = this.app.getUserByDni(this.users.get(0).getDni(), entityManager);
-		User u2 = this.app.getUserByDni(this.users.get(1).getDni(), entityManager);
-		User u3 = this.app.getUserByDni(this.users.get(2).getDni(), entityManager);
-		User u4 = this.app.getUserByDni(this.users.get(3).getDni(), entityManager);
-		User u5 = this.app.getUserByDni(this.users.get(4).getDni(), entityManager);
-		User u6 = this.app.getUserByDni(this.users.get(5).getDni(), entityManager);
-		User u7 = this.app.getUserByDni(this.users.get(6).getDni(), entityManager);
-		User u10 = this.app.getUserByDni(this.users.get(9).getDni(), entityManager);
+		User u1 = app.getUserByDni(users.get(0).getDni(), entityManager);
+		User u2 = app.getUserByDni(users.get(1).getDni(), entityManager);
+		User u3 = app.getUserByDni(users.get(2).getDni(), entityManager);
+		User u4 = app.getUserByDni(users.get(3).getDni(), entityManager);
+		User u5 = app.getUserByDni(users.get(4).getDni(), entityManager);
+		User u6 = app.getUserByDni(users.get(5).getDni(), entityManager);
+		User u7 = app.getUserByDni(users.get(6).getDni(), entityManager);
+		User u10 = app.getUserByDni(users.get(9).getDni(), entityManager);
 		
 		//Create Papers
 		
@@ -345,13 +351,13 @@ public class TestApp {
 		papers.add(p10);
 		
 		//Test p5: "Guitarra5", author = u6, keyWord = s8
-		Paper paper = this.app.getPaperByName(papers.get(4).getName(), entityManager);
+		Paper paper = app.getPaperByName(papers.get(4).getName(), entityManager);
 		assertTrue(paper.getName().equals("Guitarra5"));
 		// u6
-		User user = this.app.getUserByDni(6, entityManager);
+		User user = app.getUserByDni(6, entityManager);
 		assertTrue(paper.getAuthors().get(0).equals(user));
 		// s8
-		Subject keyWord = this.app.getSubjectByName(subjects.get(9).getName(), entityManager);
+		Subject keyWord = app.getSubjectByName(subjects.get(9).getName(), entityManager);
 		assertTrue(paper.getKeyWords().get(0).equals(keyWord));
 		
 		entityManager.close();
@@ -368,17 +374,17 @@ public class TestApp {
 		//Test p6 with u10, should not be assigned due to evaluator in same workplace
 		
 		//Get p6: poster, "Guitarra6", author = u3, keyWords = (s7, s3, s5)
-		Paper p6 = this.app.getPaperByName(papers.get(5).getName(), entityManager);
+		Paper p6 = app.getPaperByName(papers.get(5).getName(), entityManager);
 		
 		//Get u1: "Grohl, Dave", workplace: "Foo Fighters", knownSubjects: (s1, s2, s7)
 		int evaluator1Dni = users.get(0).getDni();
-		User evaluator1 = this.app.getUserByDni(evaluator1Dni, entityManager);
+		User evaluator1 = app.getUserByDni(evaluator1Dni, entityManager);
 		
 		//assign
-		Evaluation evaluation1 = this.app.assingEvaluatorToPaper(evaluator1Dni, p6, d);
+		Evaluation evaluation1 = app.assingEvaluatorToPaper(evaluator1Dni, p6, d);
 		if(evaluation1 != null) {
 			EvaluationDAO.getInstance().persist(evaluation1, entityManager);
-			this.evaluations.add(evaluation1);
+			evaluations.add(evaluation1);
 		}
 		
 		assertTrue(evaluation1.equals(null));
@@ -388,17 +394,17 @@ public class TestApp {
 		//Test p5 with u10, should not be assigned due to evaluator not knowing subject
 		
 		//Get p5: poster, "Guitarra5", author = u6, keyWords = (s8)
-		Paper p5 = this.app.getPaperByName(papers.get(4).getName(), entityManager);
+		Paper p5 = app.getPaperByName(papers.get(4).getName(), entityManager);
 		
 		//Get u10: "Holland, Dexter", workplace: "The Offspring", knownSubjects: (s4, s6)
 		int evaluator10Dni = users.get(9).getDni();
-		User evaluator10 = this.app.getUserByDni(evaluator10Dni, entityManager);
+		User evaluator10 = app.getUserByDni(evaluator10Dni, entityManager);
 		
 		//assign
 		Evaluation evaluation2 = this.app.assingEvaluatorToPaper(evaluator10Dni, p5, d);
 		if (evaluation2 != null) {
 			EvaluationDAO.getInstance().persist(evaluation2, entityManager);
-			this.evaluations.add(evaluation2);
+			evaluations.add(evaluation2);
 		}
 		
 		assertTrue(evaluation2.equals(null));
@@ -409,18 +415,18 @@ public class TestApp {
 
 		// Get u7: "Tyler, Steven", workplace: "Aerosmith", knownSubjects: (s6, s8)
 		int evaluator7Dni = users.get(6).getDni();
-		User evaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		User evaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		// assign
-		Evaluation evaluation3 = this.app.assingEvaluatorToPaper(evaluator7Dni, p5, d);
+		Evaluation evaluation3 = app.assingEvaluatorToPaper(evaluator7Dni, p5, d);
 		if (evaluation3 != null) {
 			EvaluationDAO.getInstance().persist(evaluation3, entityManager);
-			this.evaluations.add(evaluation3);
+			evaluations.add(evaluation3);
 		}
 		
-		Evaluation evaluation3DataBase = this.app.getEvaluationByPaper(p5, entityManager);
-		Paper updatedP5 = this.app.getPaperByName(papers.get(4).getName(), entityManager);
-		User updatedEvaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		Evaluation evaluation3DataBase = app.getEvaluationByPaper(p5, entityManager);
+		Paper updatedP5 = app.getPaperByName(papers.get(4).getName(), entityManager);
+		User updatedEvaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		assertTrue(evaluation3DataBase.getEvaluator().equals(evaluator7));
 		assertTrue(updatedP5.getEvaluators().get(0).equals(updatedEvaluator7));
@@ -440,21 +446,20 @@ public class TestApp {
 		//Test p2 with u10, should not be assigned due to evaluator not knowing subjects
 		
 		//Get p2: poster, "Guitarra2", author = u2, keyWords = (s3)
-		Paper p2 = this.app.getPaperByName(papers.get(1).getName(), entityManager);
+		Paper p2 = app.getPaperByName(papers.get(1).getName(), entityManager);
 		
 		//Get u10: "Holland, Dexter", workplace: "The Offspring", knownSubjects: (s4, s6)
 		int evaluator10Dni = users.get(9).getDni();
-		User evaluator10 = this.app.getUserByDni(evaluator10Dni, entityManager);
 		
 		//assign
 		Evaluation evaluation2 = this.app.assingEvaluatorToPaper(evaluator10Dni, p2, d);
 		if (evaluation2 != null) {
 			EvaluationDAO.getInstance().persist(evaluation2, entityManager);
-			this.evaluations.add(evaluation2);
+			evaluations.add(evaluation2);
 		}
 		
-		Paper updatedP2 = this.app.getPaperByName(papers.get(1).getName(), entityManager);
-		User updatedU10 = this.app.getUserByDni(evaluator10Dni, entityManager);
+		Paper updatedP2 = app.getPaperByName(papers.get(1).getName(), entityManager);
+		User updatedU10 = app.getUserByDni(evaluator10Dni, entityManager);
 		
 		assertTrue(evaluation2.equals(null));
 		assertTrue(updatedP2.getEvaluators().isEmpty());
@@ -464,18 +469,18 @@ public class TestApp {
 
 		// Get u7: "Tyler, Steven", workplace: "Aerosmith", knownSubjects: (s6, s8)
 		int evaluator7Dni = users.get(6).getDni();
-		User evaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		User evaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		// assign
-		Evaluation evaluation3 = this.app.assingEvaluatorToPaper(evaluator7Dni, updatedP2, d);
+		Evaluation evaluation3 = app.assingEvaluatorToPaper(evaluator7Dni, updatedP2, d);
 		if (evaluation3 != null) {
 			EvaluationDAO.getInstance().persist(evaluation3, entityManager);
-			this.evaluations.add(evaluation3);
+			evaluations.add(evaluation3);
 		}
 		
-		Evaluation evaluation3DataBase = this.app.getEvaluationByPaper(updatedP2, entityManager);
-		updatedP2 = this.app.getPaperByName(papers.get(4).getName(), entityManager);
-		User updatedEvaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		Evaluation evaluation3DataBase = app.getEvaluationByPaper(updatedP2, entityManager);
+		updatedP2 = app.getPaperByName(papers.get(4).getName(), entityManager);
+		User updatedEvaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		assertTrue(evaluation3DataBase.getEvaluator().equals(evaluator7));
 		assertTrue(updatedP2.getEvaluators().get(0).equals(updatedEvaluator7));
@@ -496,18 +501,18 @@ public class TestApp {
 		int evaluator7Dni = users.get(6).getDni();
 		
 		//Get p9: poster, "Guitarra9", author = u4, keyWords = (s1)
-		Paper p9 = this.app.getPaperByName(papers.get(8).getName(), entityManager);
+		Paper p9 = app.getPaperByName(papers.get(8).getName(), entityManager);
 		
 		//assign
 		Evaluation evaluation1 = this.app.assingEvaluatorToPaper(evaluator7Dni, p9, d);
 		if (evaluation1 != null) {
 			EvaluationDAO.getInstance().persist(evaluation1, entityManager);
-			this.evaluations.add(evaluation1);
+			evaluations.add(evaluation1);
 		}
 		
-		Evaluation evaluation1DataBase = this.app.getEvaluationByPaper(p9, entityManager);
-		Paper updatedP9 = this.app.getPaperByName(papers.get(8).getName(), entityManager);
-		User updatedEvaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		Evaluation evaluation1DataBase = app.getEvaluationByPaper(p9, entityManager);
+		Paper updatedP9 = app.getPaperByName(papers.get(8).getName(), entityManager);
+		User updatedEvaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		assertTrue(evaluation1DataBase.getEvaluator().equals(updatedEvaluator7));
 		assertTrue(updatedP9.getEvaluators().get(0).equals(updatedEvaluator7));
@@ -516,21 +521,21 @@ public class TestApp {
 		//Test p7 with u7, should not be assigned
 		
 		//Get p7: poster, "Guitarra7", author = u5, keyWords = (s4)
-		Paper p7 = this.app.getPaperByName(papers.get(6).getName(), entityManager);
+		Paper p7 = app.getPaperByName(papers.get(6).getName(), entityManager);
 		
 		//Get u7
-		updatedEvaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		updatedEvaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 		
 		//assign
-		Evaluation evaluation2 = this.app.assingEvaluatorToPaper(evaluator7Dni, p7, d);
+		Evaluation evaluation2 = app.assingEvaluatorToPaper(evaluator7Dni, p7, d);
 		if (evaluation2 != null) {
 			EvaluationDAO.getInstance().persist(evaluation2, entityManager);
-			this.evaluations.add(evaluation2);
+			evaluations.add(evaluation2);
 		}
 
-		Evaluation evaluation2DataBase = this.app.getEvaluationByPaper(p7, entityManager);
-		Paper updatedP7 = this.app.getPaperByName(papers.get(6).getName(), entityManager);
-		updatedEvaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
+		Evaluation evaluation2DataBase = app.getEvaluationByPaper(p7, entityManager);
+		Paper updatedP7 = app.getPaperByName(papers.get(6).getName(), entityManager);
+		updatedEvaluator7 = app.getUserByDni(evaluator7Dni, entityManager);
 
 		assertTrue(evaluation2DataBase.getEvaluator().equals(updatedEvaluator7));
 		assertTrue(updatedP7.getEvaluators().get(0).equals(updatedEvaluator7));
@@ -539,20 +544,20 @@ public class TestApp {
 		entityManager.close();
 	}
 	
+	//Inciso d)ii) Dado un revisor, retornar todos sus trabajos asignados
 	@Test
 	public void getAssignedPapers() {
 		EntityManager entityManager = emf.createEntityManager();
 		
 		//Get p2, 95, p9
-		Paper p2 = this.app.getPaperByName(this.papers.get(1).getName(), entityManager);
-		Paper p5 = this.app.getPaperByName(this.papers.get(4).getName(), entityManager);
-		Paper p9 = this.app.getPaperByName(this.papers.get(8).getName(), entityManager);
+		Paper p2 = app.getPaperByName(this.papers.get(1).getName(), entityManager);
+		Paper p5 = app.getPaperByName(this.papers.get(4).getName(), entityManager);
+		Paper p9 = app.getPaperByName(this.papers.get(8).getName(), entityManager);
 		
 		// Get u7: "Tyler, Steven", workplace: "Aerosmith", knownSubjects: (s6, s8), papersToEvaluate: (p2, p5, p9)
 		int evaluator7Dni = users.get(6).getDni();
-		User evaluator7 = this.app.getUserByDni(evaluator7Dni, entityManager);
 		
-		List<Paper> papersToEvaluate = this.app.getAssignedPapers(evaluator7Dni, entityManager);
+		List<Paper> papersToEvaluate = app.getAssignedPapers(evaluator7Dni, entityManager);
 		
 		assertTrue(papersToEvaluate.get(0).equals(p2));
 		assertTrue(papersToEvaluate.get(1).equals(p5));
@@ -561,6 +566,51 @@ public class TestApp {
 		entityManager.close();
 	}
 	
+	//Inciso d)iii) Dado un revisor y un rango de fechas, retornar todas sus revisiones
+	@Test
+	public void getEvaluationsOnDateRange() {
+		EntityManager entityManager = emf.createEntityManager();
+		
+		Calendar from = new GregorianCalendar(2018,9, 15);
+		Calendar to = new GregorianCalendar(2018,10, 20);
+		
+		// Get u7: "Tyler, Steven", workplace: "Aerosmith", knownSubjects: (s6, s8), papersToEvaluate: (p2, p5, p9)
+		int evaluator7Dni = users.get(6).getDni();
+		
+		List<Evaluation> evaluations = app.getEvaluationsByDate(evaluator7Dni, from, to, entityManager);
+		
+		assertTrue(evaluations.get(0).getDate().get(0) == 2018);
+		assertTrue(evaluations.get(0).getDate().get(1) == 10);
+		assertTrue(evaluations.get(0).getDate().get(2) == 16);
+		
+		entityManager.close();
+	}
 	
+	//Inciso d)iv) Dado un autor, retornar todos los trabajos de investigación enviados
+	@Test
+	public void getAuthoredPapers() {
+		EntityManager entityManager = emf.createEntityManager();
+		
+		Paper p2 = app.getPaperByName(this.papers.get(1).getName(), entityManager);
+		
+		int author2Dni = users.get(1).getDni();
+		
+		List<Paper> papersAuthored = app.getAuthoredPapers(author2Dni, entityManager);
+		
+		assertTrue(papersAuthored.get(0).equals(p2));
+		
+		entityManager.close();		
+	}
+	
+	//Inciso g) Eliminar todos los datos de la base de datos para realizar otro testeo
+	@AfterClass
+	public static void closeEntityManagerFactory() {
+		EntityManager entityManager= emf.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.createNativeQuery("DROP DATABASE TPE").executeUpdate();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		emf.close();
+	}
 	
 }

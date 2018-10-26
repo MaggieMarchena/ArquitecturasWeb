@@ -56,14 +56,14 @@ public class UserDAO implements DAO<User,Integer>{
 		}
 	}
 	
-	public List<Evaluation> findEvaluationsByDate(Integer id,Calendar from,Calendar to,EntityManager entityManager){
+	public List<Evaluation> findEvaluationsByDate(int id,Calendar from,Calendar to,EntityManager entityManager){
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Evaluation WHERE evaluator_dni= :evaluatorId and date BETWEEN :from and :to", Evaluation.class);
 		query.setParameter("evaluatorId", id);
 		query.setParameter("from", from);
 		query.setParameter("to", to);
 		entityManager.getTransaction().commit();
-		List <Evaluation>evaluations=query.getResultList();
+		List<Evaluation>evaluations=query.getResultList();
 		return evaluations;
 	}
 

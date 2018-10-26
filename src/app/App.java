@@ -5,6 +5,7 @@ package app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -159,6 +160,14 @@ public class App {
 		User evaluator = getUserByDni(dni, entityManager);
 		if (evaluator != null) {
 			return evaluator.getPapersAuthored();
+		}
+		return null;
+	}
+	
+	public List<Evaluation> getEvaluationsByDate(int dni, Calendar from, Calendar to, EntityManager entityManager) {
+		User evaluator = getUserByDni(dni, entityManager);
+		if (evaluator != null) {
+			return UserDAO.getInstance().findEvaluationsByDate(dni, from, to, entityManager);
 		}
 		return null;
 	}

@@ -16,12 +16,10 @@ public class Evaluation {
 	@Column(nullable = false)
 	private Calendar date;
 	
-	@Column(nullable = false)
 	@ManyToOne(cascade= CascadeType.ALL)
 	private User evaluator;
 	
 	@Id
-	@Column(nullable = false)
 	@ManyToOne(cascade= CascadeType.ALL)
 	private Paper paper;
 	

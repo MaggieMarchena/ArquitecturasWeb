@@ -30,20 +30,15 @@ public class User {
 	@Column(nullable = false)
 	private String workPlace;
 	
-	@Column(nullable = false)
-	
 	@OneToMany(cascade= CascadeType.ALL)
 	private List<Subject> knownSubjects;
 	
-	@Column(nullable = false)
 	@ManyToMany(cascade= CascadeType.ALL)
 	private List<Paper> papersToEvaluate;
 	
-	@Column(nullable = false)
 	@OneToMany(mappedBy="evaluator")
 	private List<Evaluation> evaluations;
 	
-	@Column(nullable = false)
 	@OneToMany
 	private List<Paper> papersAuthored;
 	
