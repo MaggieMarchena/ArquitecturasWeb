@@ -5,6 +5,7 @@ import java.util.Calendar;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -13,13 +14,16 @@ import javax.persistence.Table;
 @Table(name="Evaluation")
 public class Evaluation {
 	
+	@Id
+	@GeneratedValue
+	int id;
+	
 	@Column(nullable = false)
 	private Calendar date;
 	
 	@ManyToOne(cascade= CascadeType.ALL)
 	private User evaluator;
 	
-	@Id
 	@ManyToOne(cascade= CascadeType.ALL)
 	private Paper paper;
 	

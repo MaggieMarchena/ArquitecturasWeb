@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +46,10 @@ public class User {
 
 	public User() {
 		super();
+		this.knownSubjects = new ArrayList<>();
+		this.papersToEvaluate = new ArrayList<>();
+		this.evaluations = new ArrayList<>();
+		this.papersAuthored = new ArrayList<>();
 	}
 	
 	
