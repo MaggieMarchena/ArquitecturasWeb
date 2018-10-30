@@ -17,6 +17,7 @@ import entities.Evaluation;
 import entities.Paper;
 import entities.Subject;
 import entities.User;
+import services.EMF;
 import services.EvaluationDAO;
 import services.PaperDAO;
 import services.SubjectDAO;
@@ -48,12 +49,12 @@ public class App {
 		emf.close();
 	}
 	
-	public void addUser(User user) {
-		emfON();
-		EntityManager entityManager = emf.createEntityManager();
-		UserDAO.getInstance().persist(user, entityManager);
-		emfOFF();
-	}
+//	public void addUser(User user) {
+//		emfON();
+//		EntityManager entityManager = emf.createEntityManager();
+//		UserDAO.getInstance().persist(user, entityManager);
+//		emfOFF();
+//	}
 	
 	public void addPaper(Paper paper) {
 		emfON();
@@ -84,9 +85,9 @@ public class App {
 		return result;
 	}
 	
-	public List<Paper> getPapersAptForEvaluator(int dni, EntityManager entityManager){
+	public List<Paper> getPapersAptForEvaluator(int dni){
 		List<Paper> result = new ArrayList<>();
-		User evaluator = getUserByDni(dni, entityManager);
+		User evaluator = getUserByDni(dni);
 		List<Paper> papers = this.getPapers();
 		Iterator<Paper> it = papers.iterator();
 		if(evaluator != null) {
@@ -111,9 +112,9 @@ public class App {
 		return result;
 	}
 	
-	public String getEvaluatorType(int dni, EntityManager entityManager) {
+	public String getEvaluatorType(int dni) {
 		boolean result = false;
-		User user = getUserByDni(dni, entityManager);
+		User user = getUserByDni(dni);
 		if(user != null) {
 			List<Subject> evaluatorKnownSubjects = user.getKnownSubjects();
 			Iterator<Subject> it = evaluatorKnownSubjects.iterator();
@@ -148,26 +149,26 @@ public class App {
 		return evaluation;
 	}
 	
-	public List<Paper> getAssignedPapers(int dni, EntityManager entityManager) {
-		User evaluator = getUserByDni(dni, entityManager);
+	public List<Paper> getAssignedPapers(int dni) {
+		User evaluator = getUserByDni(dni);
 		if (evaluator != null) {
 			return evaluator.getPapersToEvaluate();
 		}
 		return null;
 	}
 	
-	public List<Paper> getAuthoredPapers(int dni, EntityManager entityManager) {
-		User evaluator = getUserByDni(dni, entityManager);
+	public List<Paper> getAuthoredPapers(int dni) {
+		User evaluator = getUserByDni(dni);
 		if (evaluator != null) {
 			return evaluator.getPapersAuthored();
 		}
 		return null;
 	}
 	
-	public List<Evaluation> getEvaluationsByDate(int dni, Calendar from, Calendar to, EntityManager entityManager) {
-		User evaluator = getUserByDni(dni, entityManager);
+	public List<Evaluation> getEvaluationsByDate(int dni, Calendar from, Calendar to) {
+		User evaluator = getUserByDni(dni);
 		if (evaluator != null) {
-			return UserDAO.getInstance().findEvaluationsByDate(dni, from, to, entityManager);
+			return UserDAO.getInstance().findEvaluationsByDate(dni, from, to);
 		}
 		return null;
 	}
@@ -181,8 +182,8 @@ public class App {
 		return result;
 	}
 	
-	public User getUserByDni(int dni, EntityManager entityManager) {
-		User user = UserDAO.getInstance().findById(dni, entityManager);
+	public User getUserByDni(int dni) {
+		User user = UserDAO.getInstance().findById(dni);
 		return user;
 	}
 	
@@ -223,8 +224,8 @@ public class App {
 		return evaluation;
 	}
 	
-	public Subject getSubjectByName(String name, EntityManager entityManager) {
-		Subject subject = SubjectDAO.getInstance().findByName(name, entityManager);
+	public Subject getSubjectByName(String name) {
+		Subject subject = SubjectDAO.getInstance().findByName(name);
 		return subject;
 	}
 

@@ -22,17 +22,11 @@ public class UserDAO implements DAO<User,Integer>{
 	}
 	
 
-	public User findById(Integer id, EntityManager entityManager) {	
+	public User findById(Integer id) {	
+		EntityManager entityManager = EMF.createEntityManager();
 		User user=entityManager.find(User.class, id);
 		return user;
 	
-	}
-
-	public User persist(User user, EntityManager entityManager) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(user);
-		entityManager.getTransaction().commit();
-		return user;
 	}
 	
 	public List<User> findAll(EntityManager entityManager) {
@@ -43,8 +37,9 @@ public class UserDAO implements DAO<User,Integer>{
 		return users;
 	}
 
-	public boolean delete(Integer id,EntityManager entityManager) {
-		User user= this.findById(id, entityManager);
+	public boolean delete(Integer id) {
+		EntityManager entityManager = EMF.createEntityManager();
+		User user= this.findById(id);
 		if(user!=null) {
 			entityManager.getTransaction().begin();
 			entityManager.remove(user);
@@ -56,7 +51,8 @@ public class UserDAO implements DAO<User,Integer>{
 		}
 	}
 	
-	public List<Evaluation> findEvaluationsByDate(int id,Calendar from,Calendar to,EntityManager entityManager){
+	public List<Evaluation> findEvaluationsByDate(int id,Calendar from,Calendar to){
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Evaluation WHERE evaluator_dni= :evaluatorId and date BETWEEN :from and :to", Evaluation.class);
 		query.setParameter("evaluatorId", id);
@@ -79,9 +75,12 @@ public class UserDAO implements DAO<User,Integer>{
 	}
 
 	@Override
-	public User persist(User entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public User persist(User user) {
+		EntityManager entityManager = EMF.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(user);
+		entityManager.getTransaction().commit();
+		return user;
 	}
 
 	@Override
@@ -91,21 +90,9 @@ public class UserDAO implements DAO<User,Integer>{
 	}
 
 	@Override
-	public User findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<User> findAll() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public boolean delete(Integer id) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

@@ -31,7 +31,7 @@ public class User {
 	@Column(nullable = false)
 	private String workPlace;
 	
-	@OneToMany(cascade= CascadeType.ALL)
+	@ManyToMany
 	private List<Subject> knownSubjects;
 	
 	@ManyToMany(cascade= CascadeType.ALL)

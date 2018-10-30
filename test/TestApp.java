@@ -1,38 +1,26 @@
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import app.App;
-import entities.Article;
 import entities.Evaluation;
 import entities.Paper;
-import entities.Poster;
 import entities.Subject;
-import entities.Summary;
 import entities.User;
-import services.EvaluationDAO;
-import services.PaperDAO;
+import services.EMF;
 import services.SubjectDAO;
 import services.UserDAO;
 
 public class TestApp {
 	
 	private static App app;
-	
-	private static EntityManagerFactory emf;
 	
 	private static List<User> users;
 	private static List<Paper> papers;
@@ -41,17 +29,16 @@ public class TestApp {
 	
 	@BeforeClass
 	public static void openEntityManagerFactory() {
-		emf = Persistence.createEntityManagerFactory("TPE");
+		EMF.contextInitialized();
 		app = new App();
 		subjects = new ArrayList<>();
 		users = new ArrayList<>();
 		papers = new ArrayList<>();
 		evaluations = new ArrayList<>();
 	}
-	
+
 	@Test
 	public void createSubjects() {
-		EntityManager entityManager = emf.createEntityManager();
 		
 		Subject s1 = new Subject();
 		s1.setName("Java");
@@ -81,14 +68,14 @@ public class TestApp {
 		s8.setName("Phyton");
 		s8.setExpert(true);
 		
-		SubjectDAO.getInstance().persist(s1, entityManager);
-		SubjectDAO.getInstance().persist(s2, entityManager);
-		SubjectDAO.getInstance().persist(s3, entityManager);
-		SubjectDAO.getInstance().persist(s4, entityManager);
-		SubjectDAO.getInstance().persist(s5, entityManager);
-		SubjectDAO.getInstance().persist(s6, entityManager);
-		SubjectDAO.getInstance().persist(s7, entityManager);
-		SubjectDAO.getInstance().persist(s8, entityManager);
+		SubjectDAO.getInstance().persist(s1);
+		SubjectDAO.getInstance().persist(s2);
+		SubjectDAO.getInstance().persist(s3);
+		SubjectDAO.getInstance().persist(s4);
+		SubjectDAO.getInstance().persist(s5);
+		SubjectDAO.getInstance().persist(s6);
+		SubjectDAO.getInstance().persist(s7);
+		SubjectDAO.getInstance().persist(s8);
 		
 		subjects.add(s1);
 		subjects.add(s2);
@@ -100,30 +87,27 @@ public class TestApp {
 		subjects.add(s8);
 		
 		//test subject 5: "FrontEnd", expert = false
-		Subject testSubject = app.getSubjectByName(subjects.get(4).getName(), entityManager);
+		Subject testSubject = app.getSubjectByName(subjects.get(4).getName());
 		assertTrue(testSubject.getName().equals("FrontEnd"));
 		assertTrue(!testSubject.isExpert());
-		
-		entityManager.close();
+
 	}
 	
 	//Inciso b) Crear 10 usuarios
 	//Inciso d)i) Consulta de todos los datos de un autor/revisor
 	@Test
 	public void createUsers() {
-		EntityManager entityManagerS = emf.createEntityManager();
-		EntityManager entityManagerU = emf.createEntityManager();
 		
 		//Get Subjects
 		
-		Subject s1 = app.getSubjectByName(subjects.get(0).getName(), entityManagerS);
-		Subject s2 = app.getSubjectByName(subjects.get(1).getName(), entityManagerS);
-		Subject s3 = app.getSubjectByName(subjects.get(2).getName(), entityManagerS);
-		Subject s4 = app.getSubjectByName(subjects.get(3).getName(), entityManagerS);
-		Subject s5 = app.getSubjectByName(subjects.get(4).getName(), entityManagerS);
-		Subject s6 = app.getSubjectByName(subjects.get(5).getName(), entityManagerS);
-		Subject s7 = app.getSubjectByName(subjects.get(6).getName(), entityManagerS);
-		Subject s8 = app.getSubjectByName(subjects.get(7).getName(), entityManagerS);
+		Subject s1 = app.getSubjectByName(subjects.get(0).getName());
+		Subject s2 = app.getSubjectByName(subjects.get(1).getName());
+		Subject s3 = app.getSubjectByName(subjects.get(2).getName());
+		Subject s4 = app.getSubjectByName(subjects.get(3).getName());
+		Subject s5 = app.getSubjectByName(subjects.get(4).getName());
+		Subject s6 = app.getSubjectByName(subjects.get(5).getName());
+		Subject s7 = app.getSubjectByName(subjects.get(6).getName());
+		Subject s8 = app.getSubjectByName(subjects.get(7).getName());
 		
 		//Create Users and add known subjects
 		
@@ -203,16 +187,16 @@ public class TestApp {
 		u10.addKnownSubject(s6);
 		u10.setEvaluator(true);
 		
-		UserDAO.getInstance().persist(u1, entityManagerU);
-		UserDAO.getInstance().persist(u2, entityManagerU);
-		UserDAO.getInstance().persist(u3, entityManagerU);
-		UserDAO.getInstance().persist(u4, entityManagerU);
-		UserDAO.getInstance().persist(u5, entityManagerU);
-		UserDAO.getInstance().persist(u6, entityManagerU);
-		UserDAO.getInstance().persist(u7, entityManagerU);
-		UserDAO.getInstance().persist(u8, entityManagerU);
-		UserDAO.getInstance().persist(u9, entityManagerU);
-		UserDAO.getInstance().persist(u10, entityManagerU);
+		UserDAO.getInstance().persist(u1);
+		UserDAO.getInstance().persist(u2);
+		UserDAO.getInstance().persist(u3);
+		UserDAO.getInstance().persist(u4);
+		UserDAO.getInstance().persist(u5);
+		UserDAO.getInstance().persist(u6);
+		UserDAO.getInstance().persist(u7);
+		UserDAO.getInstance().persist(u8);
+		UserDAO.getInstance().persist(u9);
+		UserDAO.getInstance().persist(u10);
 		
 		users.add(u1);
 		users.add(u2);
@@ -226,13 +210,10 @@ public class TestApp {
 		users.add(u10);
 		
 		//Test u7: "Tyler, Steven", evaluator = true, workplace = "Aerosmith"
-		User testUser = app.getUserByDni(7, entityManagerU);
+		User testUser = app.getUserByDni(7);
 		assertTrue(testUser.getName().equals("Tyler, Steven"));
 		assertTrue(testUser.isEvaluator());
 		assertTrue(testUser.getWorkPlace().equals("Aerosmith"));
-		
-		entityManagerS.close();
-		entityManagerU.close();
 	}
 	
 	//Inciso c) Crear 10 trabajos de investigación
@@ -607,12 +588,8 @@ public class TestApp {
 	//Inciso g) Eliminar todos los datos de la base de datos para realizar otro testeo
 	@AfterClass
 	public static void closeEntityManagerFactory() {
-		EntityManager entityManager= emf.createEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.createNativeQuery("DROP DATABASE CACIC2018").executeUpdate();
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		emf.close();
+		
+		EMF.contextDestroyed();
 	}
 	
 }

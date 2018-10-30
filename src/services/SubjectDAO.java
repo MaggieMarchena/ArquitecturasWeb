@@ -27,19 +27,13 @@ public class SubjectDAO implements DAO<Subject,Integer>{
 	
 	}
 	
-	public Subject findByName(String name,EntityManager entityManager) {
+	public Subject findByName(String name) {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Subject WHERE name= :name", Subject.class);
 		query.setParameter("name", name);
 		entityManager.getTransaction().commit();
 		Subject subject=(Subject)query.getSingleResult();
-		return subject;
-	}
-
-	public Subject persist(Subject subject, EntityManager entityManager) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(subject);
-		entityManager.getTransaction().commit();
 		return subject;
 	}
 	
@@ -76,9 +70,12 @@ public class SubjectDAO implements DAO<Subject,Integer>{
 	}
 
 	@Override
-	public Subject persist(Subject entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public Subject persist(Subject subject) {
+		EntityManager entityManager = EMF.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(subject);
+		entityManager.getTransaction().commit();
+		return subject;
 	}
 
 	@Override
