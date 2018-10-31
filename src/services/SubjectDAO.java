@@ -20,9 +20,21 @@ public class SubjectDAO implements DAO<Subject,Integer>{
 			daoSubject=new SubjectDAO();
 		return daoSubject;
 	}
+	
+	@Override
+	public Subject persist(Subject subject) {
+		EntityManager entityManager = EMF.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(subject);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return subject;
+	}
 
-	public Subject findById(Integer id, EntityManager entityManager) {		
+	public Subject findById(Integer id) {	
+		EntityManager entityManager = EMF.createEntityManager();
 		Subject subject=entityManager.find(Subject.class, id);
+		entityManager.close();
 		return subject;
 	
 	}
@@ -34,60 +46,58 @@ public class SubjectDAO implements DAO<Subject,Integer>{
 		query.setParameter("name", name);
 		entityManager.getTransaction().commit();
 		Subject subject=(Subject)query.getSingleResult();
+		entityManager.close();
 		return subject;
 	}
 	
-	public List<Subject> findAll(EntityManager entityManager) {
+	public List<Subject> findAll() {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Subject", Subject.class);
 		entityManager.getTransaction().commit();
 		List<Subject> subjects=query.getResultList();
+		entityManager.close();
 		return subjects;
 	}
 
-	@Override
-	public List<Subject> findAll() {
-		throw new UnsupportedOperationException();
-	}
-
 	
-	public boolean delete(Integer id, EntityManager entityManager) {
-		Subject subject= this.findById(id, entityManager);
+	public boolean delete(Integer id) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Subject subject= this.findById(id);
 		if(subject!=null) {
 			entityManager.getTransaction().begin();
 			entityManager.remove(subject);
 			entityManager.getTransaction().commit();
+			entityManager.close();
 			return true;
 		}
 		else {
+			entityManager.close();
 			return false;
 		}
 	}
 
-	@Override
-	public Subject update(Integer id, Subject entity) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Subject persist(Subject subject) {
+	public Subject update(String name, Subject newEntityValues) {
 		EntityManager entityManager = EMF.createEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist(subject);
+		Query query = entityManager.createNativeQuery("SELECT * FROM subject WHERE name= :name", Subject.class);
+		query.setParameter("name", name);
 		entityManager.getTransaction().commit();
-		return subject;
-	}
-
-	@Override
-	public Subject findById(Integer id) {
-		// TODO Auto-generated method stub
+		Subject subject = (Subject)query.getSingleResult();
+		if (subject != null) {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newEntityValues);
+			entityManager.getTransaction().commit();
+			entityManager.close();
+			return subject;
+		}
+		entityManager.close();
 		return null;
 	}
 
 	@Override
-	public boolean delete(Integer id) {
+	public Subject update(Integer id, Subject newEntityValues) {
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 
 }

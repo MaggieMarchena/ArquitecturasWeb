@@ -32,35 +32,30 @@ public class App {
 	public static final int MAX_PAPERS = 3;
 	public static final int MAX_EVALUATORS = 3;
 	public static final String EXPERT = "Expert";
-	public static final String GENERAL = "General";
-	
-	
-	
-	private static EntityManagerFactory emf;
+	public static final String GENERAL = "General";	
 	
 	public App() {
 		
 	}
 	
-	private void emfON() {
-		emf = Persistence.createEntityManagerFactory("TPE");
-	}
-	private void emfOFF() {
-		emf.close();
+	public void initialize() {
+		EMF.contextInitialized();
 	}
 	
-//	public void addUser(User user) {
-//		emfON();
-//		EntityManager entityManager = emf.createEntityManager();
-//		UserDAO.getInstance().persist(user, entityManager);
-//		emfOFF();
-//	}
+	public void terminate() {
+		EMF.contextDestroyed();
+	}
 	
-	public void addPaper(Paper paper) {
-		emfON();
-		EntityManager entityManager = emf.createEntityManager();
-		PaperDAO.getInstance().persist(paper, entityManager);
-		emfOFF();
+	public void createSubject(Subject subject) {
+		SubjectDAO.getInstance().persist(subject);
+	}
+	
+	public void createUser(User user) {
+		UserDAO.getInstance().persist(user);
+	}
+	
+	public void createPaper(Paper paper) {
+		PaperDAO.getInstance().persist(paper);
 	}
 		
 	public List<User> getAptEvaluators(Paper paper){
@@ -77,11 +72,7 @@ public class App {
 	}
 	
 	private List<User> getUsers() {
-		List<User> result;
-		emfON();
-		EntityManager entityManager = emf.createEntityManager();
-		result = UserDAO.getInstance().findAll(entityManager);
-		emfOFF();
+		List<User> result = UserDAO.getInstance().findAll();
 		return result;
 	}
 	
@@ -105,10 +96,7 @@ public class App {
 	
 	private List<Paper> getPapers() {
 		List<Paper> result;
-		emfON();
-		EntityManager entityManager = emf.createEntityManager();
-		result = PaperDAO.getInstance().findAll(entityManager);
-		emfOFF();
+		result = PaperDAO.getInstance().findAll();
 		return result;
 	}
 	
@@ -175,10 +163,7 @@ public class App {
 	
 	public List<Subject> getSubjects(){
 		List<Subject> result;
-		emfON();
-		EntityManager entityManager = emf.createEntityManager();
-		result = SubjectDAO.getInstance().findAll(entityManager);
-		emfOFF();
+		result = SubjectDAO.getInstance().findAll();
 		return result;
 	}
 	
@@ -199,28 +184,28 @@ public class App {
 		return user;
 	}
 	
-	public User updateUser(int dni, User newEntityValues, EntityManager entityManager) {
-		User user = UserDAO.getInstance().update(dni, newEntityValues, entityManager);
+	public User updateUser(int dni, User newEntityValues) {
+		User user = UserDAO.getInstance().update(dni, newEntityValues);
 		return user;
 	}
 	
-	public Paper updatePaper(String name, Paper newEntityValues, EntityManager entityManager) {
-		Paper paper = PaperDAO.getInstance().update(name, newEntityValues, entityManager);
+	public Paper updatePaper(String name, Paper newEntityValues) {
+		Paper paper = PaperDAO.getInstance().update(name, newEntityValues);
 		return paper;
 	}
 	
-	public Evaluation updateEvaluation(Paper paper, Evaluation newEntityValues, EntityManager entityManager) {
-		Evaluation evaluation = EvaluationDAO.getInstance().update(paper, newEntityValues, entityManager);
+	public Evaluation updateEvaluation(Paper paper, Evaluation newEntityValues) {
+		Evaluation evaluation = EvaluationDAO.getInstance().update(paper, newEntityValues);
 		return evaluation;
 	}
 	
-	public Paper getPaperByName(String name, EntityManager entityManager) {
-		Paper paper = PaperDAO.getInstance().findByName(name, entityManager);
+	public Paper getPaperByName(String name) {
+		Paper paper = PaperDAO.getInstance().findByName(name);
 		return paper;
 	}
 	
-	public Evaluation getEvaluationByPaper(Paper paper, EntityManager entityManager) {
-		Evaluation evaluation = EvaluationDAO.getInstance().findByPaper(paper, entityManager);
+	public Evaluation getEvaluationByPaper(Paper paper) {
+		Evaluation evaluation = EvaluationDAO.getInstance().findByPaper(paper);
 		return evaluation;
 	}
 	

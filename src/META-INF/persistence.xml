@@ -5,6 +5,9 @@
 		<class>entities.User</class>
 		<class>entities.Evaluation</class>
 		<class>entities.Paper</class>
+		<class>entities.Article</class>
+		<class>entities.Poster</class>
+		<class>entities.Summary</class>
 		<class>entities.Subject</class>
 			
 		<properties>

@@ -10,11 +10,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import app.App;
+import entities.Article;
 import entities.Evaluation;
 import entities.Paper;
+import entities.Poster;
 import entities.Subject;
+import entities.Summary;
 import entities.User;
 import services.EMF;
+import services.PaperDAO;
 import services.SubjectDAO;
 import services.UserDAO;
 
@@ -29,12 +33,12 @@ public class TestApp {
 	
 	@BeforeClass
 	public static void openEntityManagerFactory() {
-		EMF.contextInitialized();
 		app = new App();
 		subjects = new ArrayList<>();
 		users = new ArrayList<>();
 		papers = new ArrayList<>();
 		evaluations = new ArrayList<>();
+		app.initialize();
 	}
 
 	@Test
@@ -68,14 +72,14 @@ public class TestApp {
 		s8.setName("Phyton");
 		s8.setExpert(true);
 		
-		SubjectDAO.getInstance().persist(s1);
-		SubjectDAO.getInstance().persist(s2);
-		SubjectDAO.getInstance().persist(s3);
-		SubjectDAO.getInstance().persist(s4);
-		SubjectDAO.getInstance().persist(s5);
-		SubjectDAO.getInstance().persist(s6);
-		SubjectDAO.getInstance().persist(s7);
-		SubjectDAO.getInstance().persist(s8);
+		app.createSubject(s1);
+		app.createSubject(s2);
+		app.createSubject(s3);
+		app.createSubject(s4);
+		app.createSubject(s5);
+		app.createSubject(s6);
+		app.createSubject(s7);
+		app.createSubject(s8);
 		
 		subjects.add(s1);
 		subjects.add(s2);
@@ -187,16 +191,16 @@ public class TestApp {
 		u10.addKnownSubject(s6);
 		u10.setEvaluator(true);
 		
-		UserDAO.getInstance().persist(u1);
-		UserDAO.getInstance().persist(u2);
-		UserDAO.getInstance().persist(u3);
-		UserDAO.getInstance().persist(u4);
-		UserDAO.getInstance().persist(u5);
-		UserDAO.getInstance().persist(u6);
-		UserDAO.getInstance().persist(u7);
-		UserDAO.getInstance().persist(u8);
-		UserDAO.getInstance().persist(u9);
-		UserDAO.getInstance().persist(u10);
+		app.createUser(u1);
+		app.createUser(u2);
+		app.createUser(u3);
+		app.createUser(u4);
+		app.createUser(u5);
+		app.createUser(u6);
+		app.createUser(u7);
+		app.createUser(u8);
+		app.createUser(u9);
+		app.createUser(u10);
 		
 		users.add(u1);
 		users.add(u2);
@@ -216,136 +220,133 @@ public class TestApp {
 		assertTrue(testUser.getWorkPlace().equals("Aerosmith"));
 	}
 	
-	//Inciso c) Crear 10 trabajos de investigación
-	//Inciso e) Crear 10 trabajos de investigación
-//	@Test
-//	public void createPapers() {
-//		EntityManager entityManager = emf.createEntityManager();
-//		
-//		//Get Subjects
-//		
-//		Subject s1 = app.getSubjectByName(subjects.get(0).getName(), entityManager);
-//		Subject s2 = app.getSubjectByName(subjects.get(1).getName(), entityManager);
-//		Subject s3 = app.getSubjectByName(subjects.get(2).getName(), entityManager);
-//		Subject s4 = app.getSubjectByName(subjects.get(3).getName(), entityManager);
-//		Subject s5 = app.getSubjectByName(subjects.get(4).getName(), entityManager);
-//		Subject s7 = app.getSubjectByName(subjects.get(6).getName(), entityManager);
-//		Subject s8 = app.getSubjectByName(subjects.get(7).getName(), entityManager);
-//		
-//		//Get Users
-//		User u1 = app.getUserByDni(users.get(0).getDni(), entityManager);
-//		User u2 = app.getUserByDni(users.get(1).getDni(), entityManager);
-//		User u3 = app.getUserByDni(users.get(2).getDni(), entityManager);
-//		User u4 = app.getUserByDni(users.get(3).getDni(), entityManager);
-//		User u5 = app.getUserByDni(users.get(4).getDni(), entityManager);
-//		User u6 = app.getUserByDni(users.get(5).getDni(), entityManager);
-//		User u7 = app.getUserByDni(users.get(6).getDni(), entityManager);
-//		User u10 = app.getUserByDni(users.get(9).getDni(), entityManager);
-//		
-//		//Create Papers
-//		
-//		Paper p1 = new Article();
-//		p1.setName("Guitarra1");
-//		p1.addAuthor(u1);
-//		p1.addAuthor(u3);
-//		u1.addPaperAuthored(p1);
-//		u3.addPaperAuthored(p1);
-//		p1.addKeyWord(s1);
-//		p1.addKeyWord(s2);
-//
-//		Paper p2 = new Article();
-//		p2.setName("Guitarra2");
-//		p2.addAuthor(u2);
-//		u2.addPaperAuthored(p2);
-//		p2.addKeyWord(s3);
-//
-//		Paper p3 = new Article();
-//		p3.setName("Guitarra3");
-//		p3.addAuthor(u4);
-//		u4.addPaperAuthored(p3);
-//		p3.addKeyWord(s4);
-//
-//		Paper p4 = new Poster();
-//		p4.setName("Guitarra4");
-//		p4.addAuthor(u7);
-//		u7.addPaperAuthored(p4);
-//		p4.addKeyWord(s5);
-//
-//		Paper p5 = new Poster();
-//		p5.setName("Guitarra5");
-//		p5.addAuthor(u6);
-//		u6.addPaperAuthored(p5);
-//		p5.addKeyWord(s8);
-//
-//		Paper p6 = new Poster();
-//		p6.setName("Guitarra6");
-//		p6.addAuthor(u3);
-//		u10.addPaperAuthored(p6);
-//		p6.addKeyWord(s7);
-//		p6.addKeyWord(s3);
-//		p6.addKeyWord(s5);
-//
-//		Paper p7 = new Summary();
-//		p7.setName("Guitarra7");
-//		p7.addAuthor(u5);
-//		u5.addPaperAuthored(p7);
-//		p7.addKeyWord(s4);
-//
-//		Paper p8 = new Summary();
-//		p8.setName("Guitarra8");
-//		p8.addAuthor(u1);
-//		u1.addPaperAuthored(p8);
-//		p8.addKeyWord(s3);
-//		p8.addKeyWord(s2);
-//
-//		Paper p9 = new Summary();
-//		p9.setName("Guitarra9");
-//		p9.addAuthor(u4);
-//		u4.addPaperAuthored(p9);
-//		p9.addKeyWord(s1);
-//
-//		Paper p10 = new Summary();
-//		p10.setName("Guitarra10");
-//		p10.addAuthor(u7);
-//		u7.addPaperAuthored(p10);
-//		p10.addKeyWord(s7);
-//		p10.addKeyWord(s5);
-//		
-//		PaperDAO.getInstance().persist(p1, entityManager);
-//		PaperDAO.getInstance().persist(p2, entityManager);
-//		PaperDAO.getInstance().persist(p3, entityManager);
-//		PaperDAO.getInstance().persist(p4, entityManager);
-//		PaperDAO.getInstance().persist(p5, entityManager);
-//		PaperDAO.getInstance().persist(p6, entityManager);
-//		PaperDAO.getInstance().persist(p7, entityManager);
-//		PaperDAO.getInstance().persist(p8, entityManager);
-//		PaperDAO.getInstance().persist(p9, entityManager);
-//		PaperDAO.getInstance().persist(p10, entityManager);
-//		
-//		papers.add(p1);
-//		papers.add(p2);
-//		papers.add(p3);
-//		papers.add(p4);
-//		papers.add(p5);
-//		papers.add(p6);
-//		papers.add(p7);
-//		papers.add(p8);
-//		papers.add(p9);
-//		papers.add(p10);
-//		
-//		//Test p5: "Guitarra5", author = u6, keyWord = s8
-//		Paper paper = app.getPaperByName(papers.get(4).getName(), entityManager);
-//		assertTrue(paper.getName().equals("Guitarra5"));
-//		// u6
-//		User user = app.getUserByDni(6, entityManager);
-//		assertTrue(paper.getAuthors().get(0).equals(user));
-//		// s8
-//		Subject keyWord = app.getSubjectByName(subjects.get(9).getName(), entityManager);
-//		assertTrue(paper.getKeyWords().get(0).equals(keyWord));
-//		
-//		entityManager.close();
-//	}
-//	
+//	Inciso c) Crear 10 trabajos de investigación
+//	Inciso e) Crear 10 trabajos de investigación
+	@Test
+	public void createPapers() {
+		
+		//Get Subjects
+		
+		Subject s1 = app.getSubjectByName(subjects.get(0).getName());
+		Subject s2 = app.getSubjectByName(subjects.get(1).getName());
+		Subject s3 = app.getSubjectByName(subjects.get(2).getName());
+		Subject s4 = app.getSubjectByName(subjects.get(3).getName());
+		Subject s5 = app.getSubjectByName(subjects.get(4).getName());
+		Subject s7 = app.getSubjectByName(subjects.get(6).getName());
+		Subject s8 = app.getSubjectByName(subjects.get(7).getName());
+		
+		//Get Users
+		User u1 = app.getUserByDni(users.get(0).getDni());
+		User u2 = app.getUserByDni(users.get(1).getDni());
+		User u3 = app.getUserByDni(users.get(2).getDni());
+		User u4 = app.getUserByDni(users.get(3).getDni());
+		User u5 = app.getUserByDni(users.get(4).getDni());
+		User u6 = app.getUserByDni(users.get(5).getDni());
+		User u7 = app.getUserByDni(users.get(6).getDni());
+		User u10 = app.getUserByDni(users.get(9).getDni());
+		
+		//Create Papers
+		
+		Paper p1 = new Article();
+		p1.setName("Guitarra1");
+		p1.addAuthor(u1);
+		p1.addAuthor(u3);
+		u1.addPaperAuthored(p1);
+		u3.addPaperAuthored(p1);
+		p1.addKeyWord(s1);
+		p1.addKeyWord(s2);
+
+		Paper p2 = new Article();
+		p2.setName("Guitarra2");
+		p2.addAuthor(u2);
+		u2.addPaperAuthored(p2);
+		p2.addKeyWord(s3);
+
+		Paper p3 = new Article();
+		p3.setName("Guitarra3");
+		p3.addAuthor(u4);
+		u4.addPaperAuthored(p3);
+		p3.addKeyWord(s4);
+
+		Paper p4 = new Poster();
+		p4.setName("Guitarra4");
+		p4.addAuthor(u7);
+		u7.addPaperAuthored(p4);
+		p4.addKeyWord(s5);
+
+		Paper p5 = new Poster();
+		p5.setName("Guitarra5");
+		p5.addAuthor(u6);
+		u6.addPaperAuthored(p5);
+		p5.addKeyWord(s8);
+
+		Paper p6 = new Poster();
+		p6.setName("Guitarra6");
+		p6.addAuthor(u3);
+		u10.addPaperAuthored(p6);
+		p6.addKeyWord(s7);
+		p6.addKeyWord(s3);
+		p6.addKeyWord(s5);
+
+		Paper p7 = new Summary();
+		p7.setName("Guitarra7");
+		p7.addAuthor(u5);
+		u5.addPaperAuthored(p7);
+		p7.addKeyWord(s4);
+
+		Paper p8 = new Summary();
+		p8.setName("Guitarra8");
+		p8.addAuthor(u1);
+		u1.addPaperAuthored(p8);
+		p8.addKeyWord(s3);
+		p8.addKeyWord(s2);
+
+		Paper p9 = new Summary();
+		p9.setName("Guitarra9");
+		p9.addAuthor(u4);
+		u4.addPaperAuthored(p9);
+		p9.addKeyWord(s1);
+
+		Paper p10 = new Summary();
+		p10.setName("Guitarra10");
+		p10.addAuthor(u7);
+		u7.addPaperAuthored(p10);
+		p10.addKeyWord(s7);
+		p10.addKeyWord(s5);
+		
+		app.createPaper(p1);
+		app.createPaper(p2);
+		app.createPaper(p3);
+		app.createPaper(p4);
+		app.createPaper(p5);
+		app.createPaper(p6);
+		app.createPaper(p7);
+		app.createPaper(p8);
+		app.createPaper(p9);
+		app.createPaper(p10);
+		
+		papers.add(p1);
+		papers.add(p2);
+		papers.add(p3);
+		papers.add(p4);
+		papers.add(p5);
+		papers.add(p6);
+		papers.add(p7);
+		papers.add(p8);
+		papers.add(p9);
+		papers.add(p10);
+		
+		//Test p5: "Guitarra5", author = u6, keyWord = s8
+		Paper paper = app.getPaperByName(papers.get(4).getName());
+		assertTrue(paper.getName().equals("Guitarra5"));
+		// u6
+		User user = app.getUserByDni(6);
+		assertTrue(paper.getAuthors().get(0).equals(user));
+		// s8
+		Subject keyWord = app.getSubjectByName(subjects.get(9).getName());
+		assertTrue(paper.getKeyWords().get(0).equals(keyWord));
+	}
+	
 //	@Test
 //	public void assignEvaluatorToPoster() {
 //		EntityManager entityManager = emf.createEntityManager();
@@ -588,8 +589,7 @@ public class TestApp {
 	//Inciso g) Eliminar todos los datos de la base de datos para realizar otro testeo
 	@AfterClass
 	public static void closeEntityManagerFactory() {
-		
-		EMF.contextDestroyed();
+		app.terminate();
 	}
 	
 }

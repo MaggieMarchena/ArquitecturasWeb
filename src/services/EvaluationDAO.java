@@ -22,25 +22,50 @@ public class EvaluationDAO implements DAO<Evaluation,Integer>{
 		return daoEvaluation;
 	}
 
-	public Evaluation findById(Integer id, EntityManager entityManager) {		
+	@Override
+	public Evaluation findById(Integer id) {
+		EntityManager entityManager = EMF.createEntityManager();
 		Evaluation evaluation=entityManager.find(Evaluation.class, id);
+		entityManager.close();
 		return evaluation;	
 	}
 	
-	public Evaluation findByPaper(Paper paper,EntityManager entityManager) {
+	public Evaluation findByPaper(Paper paper) {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Evaluation WHERE paper= :paper", Evaluation.class);
 		query.setParameter("paper", paper);
 		entityManager.getTransaction().commit();
 		Evaluation evaluation=(Evaluation)query.getSingleResult();
+		entityManager.close();
 		return evaluation;
 	}
 
-	public Evaluation persist(Evaluation evaluation, EntityManager entityManager) {
+	@Override
+	public Evaluation persist(Evaluation evaluation) {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		entityManager.persist(evaluation);
 		entityManager.getTransaction().commit();
+		entityManager.close();
 		return evaluation;
+	}
+	
+	public Evaluation update(Paper paper, Evaluation newEntityValues) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Query query = entityManager.createNativeQuery("SELECT * FROM evaluation WHERE paper= :paper", Evaluation.class);
+		query.setParameter("paper", paper);
+		entityManager.getTransaction().commit();
+		Evaluation evaluation=(Evaluation)query.getSingleResult();
+		if (evaluation != null) {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newEntityValues);
+			entityManager.getTransaction().commit();
+			entityManager.close();
+			return evaluation;
+		}
+		entityManager.close();
+		return null;
 	}
 
 	@Override
@@ -54,34 +79,8 @@ public class EvaluationDAO implements DAO<Evaluation,Integer>{
 	}
 
 	@Override
-	public Evaluation update(Integer id, Evaluation entity) {
+	public Evaluation update(Integer id, Evaluation newEntityValues) {
 		throw new UnsupportedOperationException();
-	}
-	
-	public Evaluation update(Paper paper, Evaluation newEntityValues, EntityManager entityManager) {
-		Query query = entityManager.createNativeQuery("SELECT * FROM evaluation WHERE paper= :paper", Paper.class);
-		query.setParameter("paper", paper);
-		entityManager.getTransaction().commit();
-		Evaluation evaluation=(Evaluation)query.getSingleResult();
-		if (evaluation != null) {
-			entityManager.getTransaction().begin();
-			entityManager.persist(newEntityValues);
-			entityManager.getTransaction().commit();
-			return evaluation;
-		}
-	return null;
-	}
-
-	@Override
-	public Evaluation persist(Evaluation entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Evaluation findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

@@ -21,7 +21,16 @@ public class UserDAO implements DAO<User,Integer>{
 		return daoUser;
 	}
 	
-
+	@Override
+	public User persist(User user) {
+		EntityManager entityManager = EMF.createEntityManager();
+		entityManager.getTransaction().begin();
+		entityManager.persist(user);
+		entityManager.getTransaction().commit();
+		return user;
+	}
+	
+	@Override
 	public User findById(Integer id) {	
 		EntityManager entityManager = EMF.createEntityManager();
 		User user=entityManager.find(User.class, id);
@@ -29,14 +38,18 @@ public class UserDAO implements DAO<User,Integer>{
 	
 	}
 	
-	public List<User> findAll(EntityManager entityManager) {
+	@Override
+	public List<User> findAll() {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM User", User.class);
 		entityManager.getTransaction().commit();
 		List<User> users=query.getResultList();
+		entityManager.close();
 		return users;
 	}
 
+	@Override
 	public boolean delete(Integer id) {
 		EntityManager entityManager = EMF.createEntityManager();
 		User user= this.findById(id);
@@ -44,9 +57,11 @@ public class UserDAO implements DAO<User,Integer>{
 			entityManager.getTransaction().begin();
 			entityManager.remove(user);
 			entityManager.getTransaction().commit();
+			entityManager.close();
 			return true;
 		}
 		else {
+			entityManager.close();
 			return false;
 		}
 	}
@@ -60,38 +75,21 @@ public class UserDAO implements DAO<User,Integer>{
 		query.setParameter("to", to);
 		entityManager.getTransaction().commit();
 		List<Evaluation>evaluations=query.getResultList();
+		entityManager.close();
 		return evaluations;
 	}
 
-	public User update(Integer id, User newEntityValues, EntityManager entityManager) {
+	public User update(Integer id, User newEntityValues) {
+		EntityManager entityManager = EMF.createEntityManager();
 		User user = entityManager.find(User.class, id);
 		if (user != null) {
 			entityManager.getTransaction().begin();
 			entityManager.persist(newEntityValues);
 			entityManager.getTransaction().commit();
+			entityManager.close();
 			return user;
 		}
-		return null;
-	}
-
-	@Override
-	public User persist(User user) {
-		EntityManager entityManager = EMF.createEntityManager();
-		entityManager.getTransaction().begin();
-		entityManager.persist(user);
-		entityManager.getTransaction().commit();
-		return user;
-	}
-
-	@Override
-	public User update(Integer id, User newEntityValues) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<User> findAll() {
-		// TODO Auto-generated method stub
+		entityManager.close();
 		return null;
 	}
 

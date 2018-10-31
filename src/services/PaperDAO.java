@@ -20,43 +20,51 @@ public class PaperDAO implements DAO<Paper,Integer>{
 		return daoPaper;
 	}
 
-	public Paper findById(Integer id, EntityManager entityManager) {		
+	@Override
+	public Paper findById(Integer id) {
+		EntityManager entityManager = EMF.createEntityManager();
 		Paper paper=entityManager.find(Paper.class, id);
+		entityManager.close();
 		return paper;
 	
 	}
 	
-	public Paper findByName(String name,EntityManager entityManager) {
+	public Paper findByName(String name) {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM paper WHERE name= :name", Paper.class);
 		query.setParameter("name", name);
 		entityManager.getTransaction().commit();
 		Paper paper=(Paper)query.getSingleResult();
-		return paper;
-	}
-
-	public Paper persist(Paper paper, EntityManager entityManager) {
-		entityManager.getTransaction().begin();
-		entityManager.persist(paper);
-		entityManager.getTransaction().commit();
+		entityManager.close();
 		return paper;
 	}
 
 	@Override
-	public List<Paper> findAll() {
-		throw new UnsupportedOperationException();
+	public Paper persist(Paper paper) {
+		EntityManager entityManager = EMF.createEntityManager();
+		entityManager.getTransaction().begin();
+		//error Unknown entity: entities.Article hacer Paper abstracto?
+		entityManager.persist(paper);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		return paper;
 	}
 	
-	public List<Paper> findAll(EntityManager entityManager) {
+	@Override
+	public List<Paper> findAll() {
+		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Paper", Paper.class);
 		entityManager.getTransaction().commit();
 		List <Paper>papers=query.getResultList();
+		entityManager.close();
 		return papers;
 	}
 
 
-	public Paper update(String name, Paper newEntityValues, EntityManager entityManager) {
+	public Paper update(String name, Paper newEntityValues) {
+		EntityManager entityManager = EMF.createEntityManager();
 		Query query = entityManager.createNativeQuery("SELECT * FROM paper WHERE name= :name", Paper.class);
 		query.setParameter("name", name);
 		entityManager.getTransaction().commit();
@@ -65,33 +73,37 @@ public class PaperDAO implements DAO<Paper,Integer>{
 			entityManager.getTransaction().begin();
 			entityManager.persist(newEntityValues);
 			entityManager.getTransaction().commit();
+			entityManager.close();
 			return paper;
 		}
-	return null;
-}
-
-	@Override
-	public Paper persist(Paper entity) {
-		// TODO Auto-generated method stub
+		entityManager.close();
 		return null;
 	}
 
-	@Override
-	public Paper findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean delete(String name) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Paper paper= this.findByName(name);
+		if(paper!=null) {
+			entityManager.getTransaction().begin();
+			entityManager.remove(paper);
+			entityManager.getTransaction().commit();
+			entityManager.close();
+			return true;
+		}
+		else {
+			entityManager.close();
+			return false;
+		}
 	}
 
 	@Override
 	public Paper update(Integer id, Paper newEntityValues) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean delete(Integer id) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 }

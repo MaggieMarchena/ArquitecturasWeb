@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -30,14 +31,15 @@ public class Paper {
 	@ManyToMany(mappedBy = "papersToEvaluate")
 	protected List<User> evaluators;
 	
-	@Column(nullable = false)
-	protected boolean evaluated;
-	
-	@OneToOne
-	protected Evaluation evaluation;
+	@OneToMany(mappedBy = "paper")
+	protected List<Evaluation> evaluations;
 	
 	public Paper() {
 		super();
+		this.keyWords = new ArrayList<>();
+		this.authors = new ArrayList<>();
+		this.keyWords = new ArrayList<>();
+		this.evaluations = new ArrayList<>();
 	}
 	
 	public Paper(String name) {
@@ -110,31 +112,17 @@ public class Paper {
 	}
 
 	/**
-	 * @return the evaluated
-	 */
-	public boolean isEvaluated() {
-		return evaluated;
-	}
-
-	/**
-	 * @param evaluated the evaluated to set
-	 */
-	public void setEvaluated() {
-		this.evaluated = true;
-	}
-
-	/**
 	 * @return the evaluation
 	 */
-	public Evaluation getEvaluation() {
-		return evaluation;
+	public List<Evaluation> getEvaluations() {
+		return this.evaluations;
 	}
 
 	/**
 	 * @param evaluation the evaluation to set
 	 */
-	public void setEvaluation(Evaluation evaluation) {
-		this.evaluation = evaluation;
+	public void addEvaluation(Evaluation evaluation) {
+		this.evaluations.add(evaluation);
 	}
 	
 	public boolean evaluatorsNotFull() {
