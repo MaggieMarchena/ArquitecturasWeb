@@ -44,7 +44,6 @@ public class PaperDAO implements DAO<Paper,Integer>{
 	public Paper persist(Paper paper) {
 		EntityManager entityManager = EMF.createEntityManager();
 		entityManager.getTransaction().begin();
-		//error Unknown entity: entities.Article hacer Paper abstracto?
 		entityManager.persist(paper);
 		entityManager.getTransaction().commit();
 		entityManager.close();
@@ -65,10 +64,11 @@ public class PaperDAO implements DAO<Paper,Integer>{
 
 	public Paper update(String name, Paper newEntityValues) {
 		EntityManager entityManager = EMF.createEntityManager();
-		Query query = entityManager.createNativeQuery("SELECT * FROM paper WHERE name= :name", Paper.class);
-		query.setParameter("name", name);
-		entityManager.getTransaction().commit();
-		Paper paper=(Paper)query.getSingleResult();
+//		Query query = entityManager.createNativeQuery("SELECT * FROM paper WHERE name= :name", Paper.class);
+//		query.setParameter("name", name);
+//		entityManager.getTransaction().commit();
+//		Paper paper=(Paper)query.getSingleResult();
+		Paper paper = this.findByName(name);
 		if (paper != null) {
 			entityManager.getTransaction().begin();
 			entityManager.persist(newEntityValues);
@@ -98,12 +98,35 @@ public class PaperDAO implements DAO<Paper,Integer>{
 
 	@Override
 	public Paper update(Integer id, Paper newEntityValues) {
-		throw new UnsupportedOperationException();
+		EntityManager entityManager = EMF.createEntityManager();
+		Paper paper = this.findById(id);
+		if (paper != null) {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newEntityValues);
+			entityManager.getTransaction().commit();
+			entityManager.close();
+			return paper;
+		}
+		entityManager.close();
+		return null;
 	}
+	
+//	public void assignAuthorToPaper(int id_paper, int id_author) {
+//		EntityManager entityManager = EMF.createEntityManager();
+//		Paper paper=entityManager.find(Paper.class, id_paper);
+//		User user=entityManager.find(User.class, id_author);
+//		
+//		entityManager.getTransaction().begin();
+//		paper.addAuthor(user);
+//		entityManager.getTransaction().commit();
+//		entityManager.close();
+//	}
 
 	@Override
 	public boolean delete(Integer id) {
 		throw new UnsupportedOperationException();
 	}
+
+
 
 }

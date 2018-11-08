@@ -2,16 +2,25 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import app.App;
 
@@ -20,25 +29,43 @@ import app.App;
 public class Paper {
 	
 	@Id
+	@GeneratedValue
+	protected int id;
+	
+	@Column(nullable = false)
 	protected String name;
 	
-	@OneToMany
-	protected List<Subject> keyWords;
+	@ManyToMany()
+	@JoinTable(
+			name = "paper_keyWord",
+			joinColumns = { @JoinColumn(name = "Paper_id") },
+			inverseJoinColumns = { @JoinColumn(name = "Subject_id") }
+		)
+	//protected List<Subject> keyWords;
+	protected Set<Subject> keyWords;
 	
-	@ManyToMany(mappedBy = "papersToEvaluate")
+//	@ManyToMany
+//	@JoinTable(
+//			name = "trabajo_palabraClave",
+//			joinColumns = { @JoinColumn(name = "trabajo_id") },
+//			inverseJoinColumns = { @JoinColumn(name = "palabraClave_id") }
+//		)
+//	private Set<PalabrasClave> palabrasClave;
+	
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	protected List<User> authors;
 	
-	@ManyToMany(mappedBy = "papersToEvaluate")
+	@ManyToMany(cascade=CascadeType.ALL)//(fetch = FetchType.EAGER)
+	//@JoinTable(name = "user_evaluator")
 	protected List<User> evaluators;
 	
-	@OneToMany(mappedBy = "paper")
+	@OneToMany(mappedBy = "paper") //fetch = FetchType.EAGER)
 	protected List<Evaluation> evaluations;
 	
 	public Paper() {
 		super();
-		this.keyWords = new ArrayList<>();
+		this.keyWords = new HashSet<>();
 		this.authors = new ArrayList<>();
-		this.keyWords = new ArrayList<>();
 		this.evaluations = new ArrayList<>();
 	}
 	
@@ -64,12 +91,13 @@ public class Paper {
 	/**
 	 * @return the keyWords
 	 */
-	public List<Subject> getKeyWords() {
-		return Collections.unmodifiableList(keyWords);
+	public Set<Subject> getKeyWords() {
+		//return Collections.unmodifiableList(keyWords);
+		return this.keyWords;
 	}
 
 	/**
-	 * @param keyWords the keyWords to set
+	 * @param keyWord the keyWords to set
 	 */
 	public void addKeyWord(Subject keyWord) {
 		this.keyWords.add(keyWord);
@@ -140,6 +168,10 @@ public class Paper {
 			}
 		}
 		return result;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 }

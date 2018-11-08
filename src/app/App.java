@@ -57,6 +57,20 @@ public class App {
 	public void createPaper(Paper paper) {
 		PaperDAO.getInstance().persist(paper);
 	}
+	
+//	public void assignAuthorToPaper(int id_paper,int id_author) {
+//		PaperDAO.getInstance().assignAuthorToPaper(id_paper,id_author);
+//	}
+	
+	public void assignAuthorToPaper(Paper paper, User author) {
+		paper.addAuthor(author);
+		PaperDAO.getInstance().update(paper.getId(), paper);
+	}
+	
+	public void addSubjectToPaper(Paper paper, Subject subject) {
+		paper.addKeyWord(subject);
+		PaperDAO.getInstance().update(paper.getId(), paper);
+	}
 		
 	public List<User> getAptEvaluators(Paper paper){
 		List<User> result = new ArrayList<>();
@@ -124,7 +138,7 @@ public class App {
 		List<User> allEvaluators = this.getAptEvaluators(paper);
 		User evaluator = this.getUserByDniInList(dni, allEvaluators);
 		if(evaluator.canEvaluate(paper) && paper.isEvaluatorApt(evaluator)) {
-			evaluator.addPaperToEvaluate(paper);
+			evaluator.addPaperToEvaluate();
 			paper.addEvaluator(evaluator);
 			evaluation = new Evaluation();
 			evaluation.setEvaluator(evaluator);
@@ -138,17 +152,45 @@ public class App {
 	}
 	
 	public List<Paper> getAssignedPapers(int dni) {
+		List<Paper> result = new ArrayList<>();
 		User evaluator = getUserByDni(dni);
 		if (evaluator != null) {
-			return evaluator.getPapersToEvaluate();
+			List <Paper> papers = getPapers();
+			Iterator<Paper> it = papers.iterator();
+			while(it.hasNext()) {
+				Paper aux = it.next();
+				List<User> authors = aux.getAuthors();
+				Iterator<User> it2 = authors.iterator();
+				while(it2.hasNext() && !result.contains(evaluator)) {
+					User aux2 = it2.next();
+					if(aux2.equals(evaluator)) {
+						result.add(aux);
+					}
+				}
+				
+			}
+		}
+		if(!result.isEmpty()) {
+			return result;
 		}
 		return null;
 	}
 	
 	public List<Paper> getAuthoredPapers(int dni) {
 		User evaluator = getUserByDni(dni);
+		List<Paper> papers = this.getPapers();
+		List<Paper> result = new ArrayList<>();
 		if (evaluator != null) {
-			return evaluator.getPapersAuthored();
+			Iterator<Paper> it = papers.iterator();
+			while(it.hasNext()) {
+				Paper aux = it.next();
+				if(aux.getAuthors().contains(evaluator)) {
+					result.add(aux);
+				}
+			}
+			if(!result.isEmpty()) {
+				return result;
+			}
 		}
 		return null;
 	}
@@ -170,6 +212,16 @@ public class App {
 	public User getUserByDni(int dni) {
 		User user = UserDAO.getInstance().findById(dni);
 		return user;
+	}
+	
+	public Paper getPaperById(int id) {
+		Paper paper = PaperDAO.getInstance().findById(id);
+		return paper;
+	}
+	
+	public Subject getSubjectById(int id) {
+		Subject subject = SubjectDAO.getInstance().findById(id);
+		return subject;
 	}
 	
 	private User getUserByDniInList(int dni, List<User> list) {

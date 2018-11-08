@@ -8,7 +8,10 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,25 +34,20 @@ public class User {
 	@Column(nullable = false)
 	private String workPlace;
 	
+	@Column(nullable = false)
+	private int papersToEvaluate;
+	
 	@ManyToMany
 	private List<Subject> knownSubjects;
 	
-	@ManyToMany(cascade= CascadeType.ALL)
-	private List<Paper> papersToEvaluate;
-	
 	@OneToMany(mappedBy="evaluator")
-	private List<Evaluation> evaluations;
-	
-	@OneToMany
-	private List<Paper> papersAuthored;
-	
+	private List<Evaluation> evaluations;	
 
 	public User() {
 		super();
+		this.papersToEvaluate = 0;
 		this.knownSubjects = new ArrayList<>();
-		this.papersToEvaluate = new ArrayList<>();
 		this.evaluations = new ArrayList<>();
-		this.papersAuthored = new ArrayList<>();
 	}
 	
 	
@@ -109,6 +107,10 @@ public class User {
 		this.workPlace = workPlace;
 	}
 	
+	public void addPaperToEvaluate() {
+		this.papersToEvaluate++;
+	}
+	
 	/**
 	 * @return the knownSubjects
 	 */
@@ -121,20 +123,6 @@ public class User {
 	 */
 	public void addKnownSubject(Subject knownSubject) {
 		this.knownSubjects.add(knownSubject);
-	}
-	
-	/**
-	 * @return the papersToEvaluate
-	 */
-	public List<Paper> getPapersToEvaluate() {
-		return Collections.unmodifiableList(papersToEvaluate);
-	}
-	
-	/**
-	 * @param papersToEvaluate the papersToEvaluate to set
-	 */
-	public void addPaperToEvaluate(Paper paper) {
-		this.papersToEvaluate.add(paper);
 	}
 	
 	/**
@@ -151,29 +139,9 @@ public class User {
 		this.evaluations.add(evaluation);
 	}
 	
-	/**
-	 * @return the papersAuthored
-	 */
-	public List<Paper> getPapersAuthored() {
-		return Collections.unmodifiableList(papersAuthored);
-	}
-
-
-	/**
-	 * @param papersAuthored the papersAuthored to set
-	 */
-	public void setPapersAuthored(List<Paper> papersAuthored) {
-		this.papersAuthored = papersAuthored;
-	}
-	
-	
-	public void addPaperAuthored(Paper paper) {
-		this.papersAuthored.add(paper);
-	}
-	
 	public boolean canEvaluate(Paper paper) {
 		boolean result = true;
-		if(this.papersToEvaluate.size() > App.MAX_PAPERS) {
+		if(this.papersToEvaluate > App.MAX_PAPERS) {
 			result = false;
 		}
 		else {

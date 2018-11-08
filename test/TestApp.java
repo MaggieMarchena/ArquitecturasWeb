@@ -40,9 +40,11 @@ public class TestApp {
 		evaluations = new ArrayList<>();
 		app.initialize();
 	}
+	
+	//Test methods start with a letter to set order!!
 
 	@Test
-	public void createSubjects() {
+	public void aCreateSubjects() {
 		
 		Subject s1 = new Subject();
 		s1.setName("Java");
@@ -100,18 +102,18 @@ public class TestApp {
 	//Inciso b) Crear 10 usuarios
 	//Inciso d)i) Consulta de todos los datos de un autor/revisor
 	@Test
-	public void createUsers() {
+	public void bCreateUsers() {
 		
 		//Get Subjects
 		
-		Subject s1 = app.getSubjectByName(subjects.get(0).getName());
-		Subject s2 = app.getSubjectByName(subjects.get(1).getName());
-		Subject s3 = app.getSubjectByName(subjects.get(2).getName());
-		Subject s4 = app.getSubjectByName(subjects.get(3).getName());
-		Subject s5 = app.getSubjectByName(subjects.get(4).getName());
-		Subject s6 = app.getSubjectByName(subjects.get(5).getName());
-		Subject s7 = app.getSubjectByName(subjects.get(6).getName());
-		Subject s8 = app.getSubjectByName(subjects.get(7).getName());
+		Subject s1 = app.getSubjectById(subjects.get(0).getId());
+		Subject s2 = app.getSubjectById(subjects.get(1).getId());
+		Subject s3 = app.getSubjectById(subjects.get(2).getId());
+		Subject s4 = app.getSubjectById(subjects.get(3).getId());
+		Subject s5 = app.getSubjectById(subjects.get(4).getId());
+		Subject s6 = app.getSubjectById(subjects.get(5).getId());
+		Subject s7 = app.getSubjectById(subjects.get(6).getId());
+		Subject s8 = app.getSubjectById(subjects.get(7).getId());
 		
 		//Create Users and add known subjects
 		
@@ -223,98 +225,43 @@ public class TestApp {
 //	Inciso c) Crear 10 trabajos de investigación
 //	Inciso e) Crear 10 trabajos de investigación
 	@Test
-	public void createPapers() {
-		
-		//Get Subjects
-		
-		Subject s1 = app.getSubjectByName(subjects.get(0).getName());
-		Subject s2 = app.getSubjectByName(subjects.get(1).getName());
-		Subject s3 = app.getSubjectByName(subjects.get(2).getName());
-		Subject s4 = app.getSubjectByName(subjects.get(3).getName());
-		Subject s5 = app.getSubjectByName(subjects.get(4).getName());
-		Subject s7 = app.getSubjectByName(subjects.get(6).getName());
-		Subject s8 = app.getSubjectByName(subjects.get(7).getName());
-		
-		//Get Users
-		User u1 = app.getUserByDni(users.get(0).getDni());
-		User u2 = app.getUserByDni(users.get(1).getDni());
-		User u3 = app.getUserByDni(users.get(2).getDni());
-		User u4 = app.getUserByDni(users.get(3).getDni());
-		User u5 = app.getUserByDni(users.get(4).getDni());
-		User u6 = app.getUserByDni(users.get(5).getDni());
-		User u7 = app.getUserByDni(users.get(6).getDni());
-		User u10 = app.getUserByDni(users.get(9).getDni());
-		
+	public void cCreatePapers() {
+	
 		//Create Papers
 		
 		Paper p1 = new Article();
 		p1.setName("Guitarra1");
-		p1.addAuthor(u1);
-		p1.addAuthor(u3);
-		u1.addPaperAuthored(p1);
-		u3.addPaperAuthored(p1);
-		p1.addKeyWord(s1);
-		p1.addKeyWord(s2);
 
 		Paper p2 = new Article();
 		p2.setName("Guitarra2");
-		p2.addAuthor(u2);
-		u2.addPaperAuthored(p2);
-		p2.addKeyWord(s3);
 
 		Paper p3 = new Article();
 		p3.setName("Guitarra3");
-		p3.addAuthor(u4);
-		u4.addPaperAuthored(p3);
-		p3.addKeyWord(s4);
 
 		Paper p4 = new Poster();
 		p4.setName("Guitarra4");
-		p4.addAuthor(u7);
-		u7.addPaperAuthored(p4);
-		p4.addKeyWord(s5);
 
 		Paper p5 = new Poster();
 		p5.setName("Guitarra5");
-		p5.addAuthor(u6);
-		u6.addPaperAuthored(p5);
-		p5.addKeyWord(s8);
 
 		Paper p6 = new Poster();
 		p6.setName("Guitarra6");
-		p6.addAuthor(u3);
-		u10.addPaperAuthored(p6);
-		p6.addKeyWord(s7);
-		p6.addKeyWord(s3);
-		p6.addKeyWord(s5);
 
 		Paper p7 = new Summary();
 		p7.setName("Guitarra7");
-		p7.addAuthor(u5);
-		u5.addPaperAuthored(p7);
-		p7.addKeyWord(s4);
 
 		Paper p8 = new Summary();
 		p8.setName("Guitarra8");
-		p8.addAuthor(u1);
-		u1.addPaperAuthored(p8);
-		p8.addKeyWord(s3);
-		p8.addKeyWord(s2);
 
 		Paper p9 = new Summary();
 		p9.setName("Guitarra9");
-		p9.addAuthor(u4);
-		u4.addPaperAuthored(p9);
-		p9.addKeyWord(s1);
 
 		Paper p10 = new Summary();
 		p10.setName("Guitarra10");
-		p10.addAuthor(u7);
-		u7.addPaperAuthored(p10);
-		p10.addKeyWord(s7);
-		p10.addKeyWord(s5);
+	
+		//Persist
 		
-		app.createPaper(p1);
+		app.createPaper(p1);	
 		app.createPaper(p2);
 		app.createPaper(p3);
 		app.createPaper(p4);
@@ -335,16 +282,123 @@ public class TestApp {
 		papers.add(p8);
 		papers.add(p9);
 		papers.add(p10);
+	
+		//Test p5: "Guitarra5"
+		Paper paper = app.getPaperById(p5.getId());
+		assertTrue(paper.getName().equals("Guitarra5"));	
+	}
+	
+	@Test
+	public void dAddSubjectToPaper() {
 		
-		//Test p5: "Guitarra5", author = u6, keyWord = s8
-		Paper paper = app.getPaperByName(papers.get(4).getName());
-		assertTrue(paper.getName().equals("Guitarra5"));
-		// u6
+		// Get Subjects
+
+		Subject s1 = app.getSubjectById(subjects.get(0).getId());
+		Subject s2 = app.getSubjectById(subjects.get(1).getId());
+		Subject s3 = app.getSubjectById(subjects.get(2).getId());
+		Subject s4 = app.getSubjectById(subjects.get(3).getId());
+		Subject s5 = app.getSubjectById(subjects.get(4).getId());
+		Subject s7 = app.getSubjectById(subjects.get(6).getId());
+		Subject s8 = app.getSubjectById(subjects.get(7).getId());
+		
+		// Get Papers
+
+		Paper p1 = app.getPaperById(papers.get(0).getId());
+		Paper p2 = app.getPaperById(papers.get(1).getId());
+		Paper p3 = app.getPaperById(papers.get(2).getId());
+		Paper p4 = app.getPaperById(papers.get(3).getId());
+		Paper p5 = app.getPaperById(papers.get(4).getId());
+		Paper p6 = app.getPaperById(papers.get(5).getId());
+		Paper p7 = app.getPaperById(papers.get(6).getId());
+		Paper p8 = app.getPaperById(papers.get(7).getId());
+		Paper p9 = app.getPaperById(papers.get(8).getId());
+		Paper p10 = app.getPaperById(papers.get(9).getId());
+		
+		//Assign
+		
+		app.addSubjectToPaper(p1, s1);
+		app.addSubjectToPaper(p1, s2);
+		
+		app.addSubjectToPaper(p2, s3);
+		
+		app.addSubjectToPaper(p3, s4);
+		
+		app.addSubjectToPaper(p4, s5);
+		
+		app.addSubjectToPaper(p5, s8);
+		
+		app.addSubjectToPaper(p6, s3);
+		app.addSubjectToPaper(p6, s5);
+		app.addSubjectToPaper(p6, s7);
+		
+		app.addSubjectToPaper(p7, s4);
+		
+		app.addSubjectToPaper(p8, s2);
+		app.addSubjectToPaper(p8, s3);
+
+		app.addSubjectToPaper(p9, s1);
+
+		app.addSubjectToPaper(p10, s5);
+		app.addSubjectToPaper(p10, s7);
+		
+		//Test: p5 with s8
+		Paper paper = app.getPaperById(p5.getId());
+		Subject keyWord = app.getSubjectById(s8.getId());
+		assertTrue(paper.getKeyWords().contains(keyWord));
+		
+	}
+	
+	@Test
+	public void eAssignAuthorToPaper() {
+
+		// Get Users
+		User u1 = app.getUserByDni(users.get(0).getDni());
+		User u2 = app.getUserByDni(users.get(1).getDni());
+		User u3 = app.getUserByDni(users.get(2).getDni());
+		User u4 = app.getUserByDni(users.get(3).getDni());
+		User u5 = app.getUserByDni(users.get(4).getDni());
+		User u6 = app.getUserByDni(users.get(5).getDni());
+		User u7 = app.getUserByDni(users.get(6).getDni());
+		
+		// Get Papers
+
+		Paper p1 = app.getPaperById(papers.get(0).getId());
+		Paper p2 = app.getPaperById(papers.get(1).getId());
+		Paper p3 = app.getPaperById(papers.get(2).getId());
+		Paper p4 = app.getPaperById(papers.get(3).getId());
+		Paper p5 = app.getPaperById(papers.get(4).getId());
+		Paper p6 = app.getPaperById(papers.get(5).getId());
+		Paper p7 = app.getPaperById(papers.get(6).getId());
+		Paper p8 = app.getPaperById(papers.get(7).getId());
+		Paper p9 = app.getPaperById(papers.get(8).getId());
+		Paper p10 = app.getPaperById(papers.get(9).getId());
+		
+		app.assignAuthorToPaper(p1, u1);
+		app.assignAuthorToPaper(p1, u3);
+		
+		app.assignAuthorToPaper(p2, u2);
+		
+		app.assignAuthorToPaper(p3, u4);
+		
+		app.assignAuthorToPaper(p4, u7);
+		
+		app.assignAuthorToPaper(p5, u6);
+		
+		app.assignAuthorToPaper(p6, u3);
+		
+		app.assignAuthorToPaper(p7, u5);
+		
+		app.assignAuthorToPaper(p8, u1);
+		
+		app.assignAuthorToPaper(p9, u4);
+		
+		app.assignAuthorToPaper(p10, u7);
+		
+		//Test: p5 with u6
+		Paper paper = app.getPaperById(p5.getId());
 		User user = app.getUserByDni(6);
 		assertTrue(paper.getAuthors().get(0).equals(user));
-		// s8
-		Subject keyWord = app.getSubjectByName(subjects.get(9).getName());
-		assertTrue(paper.getKeyWords().get(0).equals(keyWord));
+		
 	}
 	
 //	@Test
