@@ -264,5 +264,16 @@ public class App {
 		Subject subject = SubjectDAO.getInstance().findByName(name);
 		return subject;
 	}
+	
+	public User getUserInSet(Set<User> users, User user) {
+		Iterator<User> it = users.iterator();
+		while(it.hasNext()) {
+			User aux = it.next();
+			if(aux.getDni() == user.getDni()) {
+				return aux;
+			}
+		}
+		return null;
+	}
 
 }

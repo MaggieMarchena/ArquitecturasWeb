@@ -41,10 +41,10 @@ public class Paper {
 			joinColumns = { @JoinColumn(name = "Paper_id") },
 			inverseJoinColumns = { @JoinColumn(name = "Subject_id") }
 		)
-	//protected List<Subject> keyWords;
-	protected Set<Subject> keyWords;
+	protected List<Subject> keyWords;
+	//protected Set<Subject> keyWords;
 	
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinTable(
 			name = "paper_author",
 			joinColumns = { @JoinColumn(name = "Paper_id") },
@@ -66,8 +66,10 @@ public class Paper {
 	
 	public Paper() {
 		super();
-		this.keyWords = new HashSet<>();
+		//this.keyWords = new HashSet<>();
+		this.keyWords = new ArrayList<>();
 		this.authors = new HashSet<>();
+		//this.authors = new ArrayList<>();
 		this.evaluations = new ArrayList<>();
 	}
 	
@@ -93,8 +95,9 @@ public class Paper {
 	/**
 	 * @return the keyWords
 	 */
-	public Set<Subject> getKeyWords() {
-		return Collections.unmodifiableSet(keyWords);
+	public List<Subject> getKeyWords() {
+		//return Collections.unmodifiableSet(keyWords);
+		return Collections.unmodifiableList(keyWords);
 	}
 
 	/**
@@ -109,6 +112,7 @@ public class Paper {
 	 */
 	public Set<User> getAuthors() {
 		return Collections.unmodifiableSet(authors);
+		//return Collections.unmodifiableList(authors);
 	}
 	
 	public void addAuthor(User author) {

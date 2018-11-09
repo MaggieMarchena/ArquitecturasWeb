@@ -344,7 +344,7 @@ public class TestApp {
 		//Test: p5 with s8
 		Paper paper = app.getPaperById(p5.getId());
 		Subject keyWord = app.getSubjectById(s8.getId());
-		assertTrue(paper.getKeyWords().contains(keyWord));
+		assertTrue(paper.getKeyWords().get(0).getName().equals(keyWord.getName()));
 		
 	}
 	
@@ -396,8 +396,8 @@ public class TestApp {
 		
 		//Test: p5 with u6
 		Paper paper = app.getPaperById(p5.getId());
-		User user = app.getUserByDni(6);
-		assertTrue(paper.getAuthors().contains(user));
+		User author = app.getUserInSet(paper.getAuthors(), u6);
+		assertTrue(author.getDni() == u6.getDni());
 		
 	}
 	
