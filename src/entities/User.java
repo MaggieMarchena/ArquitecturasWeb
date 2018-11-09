@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -145,7 +146,7 @@ public class User {
 			result = false;
 		}
 		else {
-			List<User> authors = paper.getAuthors();
+			Set<User> authors = paper.getAuthors();
 			if(authors.contains(this)) {
 				result = false;
 			}

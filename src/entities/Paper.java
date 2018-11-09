@@ -35,7 +35,7 @@ public class Paper {
 	@Column(nullable = false)
 	protected String name;
 	
-	@ManyToMany()
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "paper_keyWord",
 			joinColumns = { @JoinColumn(name = "Paper_id") },
@@ -44,19 +44,21 @@ public class Paper {
 	//protected List<Subject> keyWords;
 	protected Set<Subject> keyWords;
 	
-//	@ManyToMany
-//	@JoinTable(
-//			name = "trabajo_palabraClave",
-//			joinColumns = { @JoinColumn(name = "trabajo_id") },
-//			inverseJoinColumns = { @JoinColumn(name = "palabraClave_id") }
-//		)
-//	private Set<PalabrasClave> palabrasClave;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	protected List<User> authors;
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(
+			name = "paper_author",
+			joinColumns = { @JoinColumn(name = "Paper_id") },
+			inverseJoinColumns = { @JoinColumn(name = "User_id") }
+		)
+	//protected List<User> authors;
+	protected Set<User> authors;
 	
 	@ManyToMany(cascade=CascadeType.ALL)//(fetch = FetchType.EAGER)
-	//@JoinTable(name = "user_evaluator")
+	@JoinTable(
+			name = "paper_evaluator",
+			joinColumns = { @JoinColumn(name = "Paper_id") },
+			inverseJoinColumns = { @JoinColumn(name = "User_id") }
+		)
 	protected List<User> evaluators;
 	
 	@OneToMany(mappedBy = "paper") //fetch = FetchType.EAGER)
@@ -65,7 +67,7 @@ public class Paper {
 	public Paper() {
 		super();
 		this.keyWords = new HashSet<>();
-		this.authors = new ArrayList<>();
+		this.authors = new HashSet<>();
 		this.evaluations = new ArrayList<>();
 	}
 	
@@ -92,8 +94,7 @@ public class Paper {
 	 * @return the keyWords
 	 */
 	public Set<Subject> getKeyWords() {
-		//return Collections.unmodifiableList(keyWords);
-		return this.keyWords;
+		return Collections.unmodifiableSet(keyWords);
 	}
 
 	/**
@@ -106,15 +107,8 @@ public class Paper {
 	/**
 	 * @return the authors
 	 */
-	public List<User> getAuthors() {
-		return Collections.unmodifiableList(authors);
-	}
-
-	/**
-	 * @param authors the authors to set
-	 */
-	public void setAuthors(List<User> authors) {
-		this.authors = authors;
+	public Set<User> getAuthors() {
+		return Collections.unmodifiableSet(authors);
 	}
 	
 	public void addAuthor(User author) {

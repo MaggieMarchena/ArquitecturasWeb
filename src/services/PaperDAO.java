@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import entities.Paper;
+import entities.Subject;
 import entities.User;
 
 public class PaperDAO implements DAO<Paper,Integer>{
@@ -111,16 +112,25 @@ public class PaperDAO implements DAO<Paper,Integer>{
 		return null;
 	}
 	
-//	public void assignAuthorToPaper(int id_paper, int id_author) {
-//		EntityManager entityManager = EMF.createEntityManager();
-//		Paper paper=entityManager.find(Paper.class, id_paper);
-//		User user=entityManager.find(User.class, id_author);
-//		
-//		entityManager.getTransaction().begin();
-//		paper.addAuthor(user);
-//		entityManager.getTransaction().commit();
-//		entityManager.close();
-//	}
+	public void addSubjectToPaper(int id_paper, int id_subject) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Paper paper = entityManager.find(Paper.class, id_paper);
+		Subject subject = entityManager.find(Subject.class, id_subject);
+		entityManager.getTransaction().begin();
+		paper.addKeyWord(subject);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
+	
+	public void assignAuthorToPaper(int id_paper, int id_author) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Paper paper = entityManager.find(Paper.class, id_paper);
+		User author = entityManager.find(User.class, id_author);
+		entityManager.getTransaction().begin();
+		paper.addAuthor(author);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
 
 	@Override
 	public boolean delete(Integer id) {

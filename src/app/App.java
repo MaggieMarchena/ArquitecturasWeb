@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -62,14 +63,12 @@ public class App {
 //		PaperDAO.getInstance().assignAuthorToPaper(id_paper,id_author);
 //	}
 	
-	public void assignAuthorToPaper(Paper paper, User author) {
-		paper.addAuthor(author);
-		PaperDAO.getInstance().update(paper.getId(), paper);
+	public void assignAuthorToPaper(int id_paper, int id_author) {
+		PaperDAO.getInstance().assignAuthorToPaper(id_paper, id_author);
 	}
 	
-	public void addSubjectToPaper(Paper paper, Subject subject) {
-		paper.addKeyWord(subject);
-		PaperDAO.getInstance().update(paper.getId(), paper);
+	public void addSubjectToPaper(int id_paper, int id_subject) {
+		PaperDAO.getInstance().addSubjectToPaper(id_paper, id_subject);
 	}
 		
 	public List<User> getAptEvaluators(Paper paper){
@@ -159,7 +158,7 @@ public class App {
 			Iterator<Paper> it = papers.iterator();
 			while(it.hasNext()) {
 				Paper aux = it.next();
-				List<User> authors = aux.getAuthors();
+				Set<User> authors = aux.getAuthors();
 				Iterator<User> it2 = authors.iterator();
 				while(it2.hasNext() && !result.contains(evaluator)) {
 					User aux2 = it2.next();

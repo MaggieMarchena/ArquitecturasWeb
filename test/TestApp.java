@@ -316,30 +316,30 @@ public class TestApp {
 		
 		//Assign
 		
-		app.addSubjectToPaper(p1, s1);
-		app.addSubjectToPaper(p1, s2);
+		app.addSubjectToPaper(p1.getId(), s1.getId());
+		app.addSubjectToPaper(p1.getId(), s2.getId());
 		
-		app.addSubjectToPaper(p2, s3);
+		app.addSubjectToPaper(p2.getId(), s3.getId());
 		
-		app.addSubjectToPaper(p3, s4);
+		app.addSubjectToPaper(p3.getId(), s4.getId());
 		
-		app.addSubjectToPaper(p4, s5);
+		app.addSubjectToPaper(p4.getId(), s5.getId());
 		
-		app.addSubjectToPaper(p5, s8);
+		app.addSubjectToPaper(p5.getId(), s8.getId());
 		
-		app.addSubjectToPaper(p6, s3);
-		app.addSubjectToPaper(p6, s5);
-		app.addSubjectToPaper(p6, s7);
+		app.addSubjectToPaper(p6.getId(), s3.getId());
+		app.addSubjectToPaper(p6.getId(), s5.getId());
+		app.addSubjectToPaper(p6.getId(), s7.getId());
 		
-		app.addSubjectToPaper(p7, s4);
+		app.addSubjectToPaper(p7.getId(), s4.getId());
 		
-		app.addSubjectToPaper(p8, s2);
-		app.addSubjectToPaper(p8, s3);
+		app.addSubjectToPaper(p8.getId(), s2.getId());
+		app.addSubjectToPaper(p8.getId(), s3.getId());
 
-		app.addSubjectToPaper(p9, s1);
+		app.addSubjectToPaper(p9.getId(), s1.getId());
 
-		app.addSubjectToPaper(p10, s5);
-		app.addSubjectToPaper(p10, s7);
+		app.addSubjectToPaper(p10.getId(), s5.getId());
+		app.addSubjectToPaper(p10.getId(), s7.getId());
 		
 		//Test: p5 with s8
 		Paper paper = app.getPaperById(p5.getId());
@@ -373,31 +373,31 @@ public class TestApp {
 		Paper p9 = app.getPaperById(papers.get(8).getId());
 		Paper p10 = app.getPaperById(papers.get(9).getId());
 		
-		app.assignAuthorToPaper(p1, u1);
-		app.assignAuthorToPaper(p1, u3);
+		app.assignAuthorToPaper(p1.getId(), u1.getDni());
+		app.assignAuthorToPaper(p1.getId(), u3.getDni());
 		
-		app.assignAuthorToPaper(p2, u2);
+		app.assignAuthorToPaper(p2.getId(), u2.getDni());
 		
-		app.assignAuthorToPaper(p3, u4);
+		app.assignAuthorToPaper(p3.getId(), u4.getDni());
 		
-		app.assignAuthorToPaper(p4, u7);
+		app.assignAuthorToPaper(p4.getId(), u7.getDni());
 		
-		app.assignAuthorToPaper(p5, u6);
+		app.assignAuthorToPaper(p5.getId(), u6.getDni());
 		
-		app.assignAuthorToPaper(p6, u3);
+		app.assignAuthorToPaper(p6.getId(), u3.getDni());
 		
-		app.assignAuthorToPaper(p7, u5);
+		app.assignAuthorToPaper(p7.getId(), u5.getDni());
 		
-		app.assignAuthorToPaper(p8, u1);
+		app.assignAuthorToPaper(p8.getId(), u1.getDni());
 		
-		app.assignAuthorToPaper(p9, u4);
+		app.assignAuthorToPaper(p9.getId(), u4.getDni());
 		
-		app.assignAuthorToPaper(p10, u7);
+		app.assignAuthorToPaper(p10.getId(), u7.getDni());
 		
 		//Test: p5 with u6
 		Paper paper = app.getPaperById(p5.getId());
 		User user = app.getUserByDni(6);
-		assertTrue(paper.getAuthors().get(0).equals(user));
+		assertTrue(paper.getAuthors().contains(user));
 		
 	}
 	
