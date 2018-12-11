@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -25,6 +26,9 @@ public class PaperDAO implements DAO<Paper,Integer>{
 	public Paper findById(Integer id) {
 		EntityManager entityManager = EMF.createEntityManager();
 		Paper paper=entityManager.find(Paper.class, id);
+		paper.getKeyWords().size();
+		paper.getAuthors().size();
+		paper.getEvaluators().size();
 		entityManager.close();
 		return paper;
 	
@@ -57,7 +61,7 @@ public class PaperDAO implements DAO<Paper,Integer>{
 		entityManager.getTransaction().begin();
 		Query query = entityManager.createNativeQuery("SELECT * FROM Paper", Paper.class);
 		entityManager.getTransaction().commit();
-		List <Paper>papers=query.getResultList();
+		List<Paper>papers = query.getResultList();
 		entityManager.close();
 		return papers;
 	}
@@ -100,7 +104,7 @@ public class PaperDAO implements DAO<Paper,Integer>{
 	@Override
 	public Paper update(Integer id, Paper newEntityValues) {
 		EntityManager entityManager = EMF.createEntityManager();
-		Paper paper = this.findById(id);
+		Paper paper = entityManager.find(Paper.class, id);
 		if (paper != null) {
 			entityManager.getTransaction().begin();
 			entityManager.persist(newEntityValues);
@@ -130,6 +134,26 @@ public class PaperDAO implements DAO<Paper,Integer>{
 		paper.addAuthor(author);
 		entityManager.getTransaction().commit();
 		entityManager.close();
+	}
+	
+	public void assignEvaluatorToPaper(int id_paper, int id_evaluator) {
+		EntityManager entityManager = EMF.createEntityManager();
+		Paper paper = entityManager.find(Paper.class, id_paper);
+		User evaluator = entityManager.find(User.class, id_evaluator);
+		entityManager.getTransaction().begin();
+		paper.addEvaluator(evaluator);
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
+	
+	//encontrar la consulta con join
+	public List<User> getEvaluators(int id_paper){
+		EntityManager entityManager = EMF.createEntityManager();
+		Query query = entityManager.createNativeQuery("SELECT * FROM paper_evaluator WHERE Paper_id= :id_paper", User.class);
+		query.setParameter("id_paper", id_paper);
+		entityManager.getTransaction().commit();
+		List<User> result = query.getResultList();
+		return result;
 	}
 
 	@Override

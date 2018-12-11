@@ -41,7 +41,12 @@ public class User {
 	@ManyToMany
 	private List<Subject> knownSubjects;
 	
-	@OneToMany(mappedBy="evaluator")
+	@OneToMany()
+	@JoinTable(
+			name = "user_evaluation",
+			joinColumns = { @JoinColumn(name = "User_id") },
+			inverseJoinColumns = { @JoinColumn(name = "Evaluation_id") }
+		)
 	private List<Evaluation> evaluations;	
 
 	public User() {
@@ -146,7 +151,7 @@ public class User {
 			result = false;
 		}
 		else {
-			Set<User> authors = paper.getAuthors();
+			List<User> authors = paper.getAuthors();
 			if(authors.contains(this)) {
 				result = false;
 			}

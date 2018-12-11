@@ -59,10 +59,6 @@ public class App {
 		PaperDAO.getInstance().persist(paper);
 	}
 	
-//	public void assignAuthorToPaper(int id_paper,int id_author) {
-//		PaperDAO.getInstance().assignAuthorToPaper(id_paper,id_author);
-//	}
-	
 	public void assignAuthorToPaper(int id_paper, int id_author) {
 		PaperDAO.getInstance().assignAuthorToPaper(id_paper, id_author);
 	}
@@ -70,6 +66,10 @@ public class App {
 	public void addSubjectToPaper(int id_paper, int id_subject) {
 		PaperDAO.getInstance().addSubjectToPaper(id_paper, id_subject);
 	}
+	
+//	public List<User> getEvaluatorsOfPaper(int id_paper){
+//		
+//	}
 		
 	public List<User> getAptEvaluators(Paper paper){
 		List<User> result = new ArrayList<>();
@@ -132,24 +132,17 @@ public class App {
 		return GENERAL;
 	}
 	
-	public Evaluation assingEvaluatorToPaper(int dni, Paper paper, Calendar date) {
-		Evaluation evaluation = null;
+	public void assingEvaluatorToPaper(int dni, int id_paper) {
+		Paper paper = this.getPaperById(id_paper);
 		List<User> allEvaluators = this.getAptEvaluators(paper);
 		User evaluator = this.getUserByDniInList(dni, allEvaluators);
 		if(evaluator.canEvaluate(paper) && paper.isEvaluatorApt(evaluator)) {
-			evaluator.addPaperToEvaluate();
-			paper.addEvaluator(evaluator);
-			evaluation = new Evaluation();
-			evaluation.setEvaluator(evaluator);
-			evaluation.setPaper(paper);
-			evaluation.setDate(date);
-			evaluator.addEvaluation(evaluation);
-			UserDAO.getInstance().persist(evaluator);
-			PaperDAO.getInstance().persist(paper);
+			UserDAO.getInstance().assignPaperToEvaluate(dni);
+			PaperDAO.getInstance().assignEvaluatorToPaper(id_paper, dni);
 		}
-		return evaluation;
 	}
 	
+	//refactor con query!
 	public List<Paper> getAssignedPapers(int dni) {
 		List<Paper> result = new ArrayList<>();
 		User evaluator = getUserByDni(dni);
@@ -158,7 +151,7 @@ public class App {
 			Iterator<Paper> it = papers.iterator();
 			while(it.hasNext()) {
 				Paper aux = it.next();
-				Set<User> authors = aux.getAuthors();
+				List<User> authors = aux.getAuthors();
 				Iterator<User> it2 = authors.iterator();
 				while(it2.hasNext() && !result.contains(evaluator)) {
 					User aux2 = it2.next();
@@ -175,6 +168,7 @@ public class App {
 		return null;
 	}
 	
+	//refactor con query!
 	public List<Paper> getAuthoredPapers(int dni) {
 		User evaluator = getUserByDni(dni);
 		List<Paper> papers = this.getPapers();

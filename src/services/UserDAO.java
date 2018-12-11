@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import entities.Evaluation;
+import entities.Paper;
 import entities.User;
 
 public class UserDAO implements DAO<User,Integer>{
@@ -34,6 +35,8 @@ public class UserDAO implements DAO<User,Integer>{
 	public User findById(Integer id) {	
 		EntityManager entityManager = EMF.createEntityManager();
 		User user=entityManager.find(User.class, id);
+		user.getEvaluation().size();
+		user.getKnownSubjects().size();
 		return user;
 	
 	}
@@ -77,6 +80,15 @@ public class UserDAO implements DAO<User,Integer>{
 		List<Evaluation>evaluations=query.getResultList();
 		entityManager.close();
 		return evaluations;
+	}
+	
+	public void assignPaperToEvaluate(int id) {
+		EntityManager entityManager = EMF.createEntityManager();
+		User evaluator = entityManager.find(User.class, id);
+		entityManager.getTransaction().begin();
+		evaluator.addPaperToEvaluate();
+		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 
 	public User update(Integer id, User newEntityValues) {

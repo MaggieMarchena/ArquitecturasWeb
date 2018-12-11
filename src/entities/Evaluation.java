@@ -22,9 +22,6 @@ public class Evaluation {
 	private Calendar date;
 	
 	@ManyToOne(cascade= CascadeType.ALL)
-	private User evaluator;
-	
-	@ManyToOne(cascade= CascadeType.ALL)
 	private Paper paper;
 	
 	public Evaluation() {
@@ -43,20 +40,6 @@ public class Evaluation {
 	 */
 	public void setDate(Calendar date) {
 		this.date = date;
-	}
-
-	/**
-	 * @return the evaluator
-	 */
-	public User getEvaluator() {
-		return evaluator;
-	}
-
-	/**
-	 * @param evaluator the evaluator to set
-	 */
-	public void setEvaluator(User evaluator) {
-		this.evaluator = evaluator;
 	}
 
 	/**

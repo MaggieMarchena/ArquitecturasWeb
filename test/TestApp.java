@@ -348,84 +348,73 @@ public class TestApp {
 		
 	}
 	
-	@Test
-	public void eAssignAuthorToPaper() {
-
-		// Get Users
-		User u1 = app.getUserByDni(users.get(0).getDni());
-		User u2 = app.getUserByDni(users.get(1).getDni());
-		User u3 = app.getUserByDni(users.get(2).getDni());
-		User u4 = app.getUserByDni(users.get(3).getDni());
-		User u5 = app.getUserByDni(users.get(4).getDni());
-		User u6 = app.getUserByDni(users.get(5).getDni());
-		User u7 = app.getUserByDni(users.get(6).getDni());
-		
-		// Get Papers
-
-		Paper p1 = app.getPaperById(papers.get(0).getId());
-		Paper p2 = app.getPaperById(papers.get(1).getId());
-		Paper p3 = app.getPaperById(papers.get(2).getId());
-		Paper p4 = app.getPaperById(papers.get(3).getId());
-		Paper p5 = app.getPaperById(papers.get(4).getId());
-		Paper p6 = app.getPaperById(papers.get(5).getId());
-		Paper p7 = app.getPaperById(papers.get(6).getId());
-		Paper p8 = app.getPaperById(papers.get(7).getId());
-		Paper p9 = app.getPaperById(papers.get(8).getId());
-		Paper p10 = app.getPaperById(papers.get(9).getId());
-		
-		app.assignAuthorToPaper(p1.getId(), u1.getDni());
-		app.assignAuthorToPaper(p1.getId(), u3.getDni());
-		
-		app.assignAuthorToPaper(p2.getId(), u2.getDni());
-		
-		app.assignAuthorToPaper(p3.getId(), u4.getDni());
-		
-		app.assignAuthorToPaper(p4.getId(), u7.getDni());
-		
-		app.assignAuthorToPaper(p5.getId(), u6.getDni());
-		
-		app.assignAuthorToPaper(p6.getId(), u3.getDni());
-		
-		app.assignAuthorToPaper(p7.getId(), u5.getDni());
-		
-		app.assignAuthorToPaper(p8.getId(), u1.getDni());
-		
-		app.assignAuthorToPaper(p9.getId(), u4.getDni());
-		
-		app.assignAuthorToPaper(p10.getId(), u7.getDni());
-		
-		//Test: p5 with u6
-		Paper paper = app.getPaperById(p5.getId());
-		User author = app.getUserInSet(paper.getAuthors(), u6);
-		assertTrue(author.getDni() == u6.getDni());
-		
-	}
-	
+//	@Test
+//	public void eAssignAuthorToPaper() {
+//
+//		// Get Users
+//		User u1 = app.getUserByDni(users.get(0).getDni());
+//		User u2 = app.getUserByDni(users.get(1).getDni());
+//		User u3 = app.getUserByDni(users.get(2).getDni());
+//		User u4 = app.getUserByDni(users.get(3).getDni());
+//		User u5 = app.getUserByDni(users.get(4).getDni());
+//		User u6 = app.getUserByDni(users.get(5).getDni());
+//		User u7 = app.getUserByDni(users.get(6).getDni());
+//		
+//		// Get Papers
+//
+//		Paper p1 = app.getPaperById(papers.get(0).getId());
+//		Paper p2 = app.getPaperById(papers.get(1).getId());
+//		Paper p3 = app.getPaperById(papers.get(2).getId());
+//		Paper p4 = app.getPaperById(papers.get(3).getId());
+//		Paper p5 = app.getPaperById(papers.get(4).getId());
+//		Paper p6 = app.getPaperById(papers.get(5).getId());
+//		Paper p7 = app.getPaperById(papers.get(6).getId());
+//		Paper p8 = app.getPaperById(papers.get(7).getId());
+//		Paper p9 = app.getPaperById(papers.get(8).getId());
+//		Paper p10 = app.getPaperById(papers.get(9).getId());
+//		
+//		app.assignAuthorToPaper(p1.getId(), u1.getDni());
+//		app.assignAuthorToPaper(p1.getId(), u3.getDni());
+//		
+//		app.assignAuthorToPaper(p2.getId(), u2.getDni());
+//		
+//		app.assignAuthorToPaper(p3.getId(), u4.getDni());
+//		
+//		app.assignAuthorToPaper(p4.getId(), u7.getDni());
+//		
+//		app.assignAuthorToPaper(p5.getId(), u6.getDni());
+//		
+//		app.assignAuthorToPaper(p6.getId(), u3.getDni());
+//		
+//		app.assignAuthorToPaper(p7.getId(), u5.getDni());
+//		
+//		app.assignAuthorToPaper(p8.getId(), u1.getDni());
+//		
+//		app.assignAuthorToPaper(p9.getId(), u4.getDni());
+//		
+//		app.assignAuthorToPaper(p10.getId(), u7.getDni());
+//		
+//		//Test: p5 with u6
+//		Paper paper = app.getPaperById(p5.getId());
+//		User author = app.getUserInSet(paper.getAuthors(), u6);
+//		assertTrue(author.getDni() == u6.getDni());
+//		
+//	}
+//	
 //	@Test
 //	public void assignEvaluatorToPoster() {
-//		EntityManager entityManager = emf.createEntityManager();
-//		
-//		//Create dates
-//		
-//		Calendar d = Calendar.getInstance();
 //				
-//		//Test p6 with u10, should not be assigned due to evaluator in same workplace
+//		//Test p6 with u1, should not be assigned due to evaluator in same workplace
 //		
 //		//Get p6: poster, "Guitarra6", author = u3, keyWords = (s7, s3, s5)
-//		Paper p6 = app.getPaperByName(papers.get(5).getName(), entityManager);
+//		int p6Id = papers.get(5).getId();
 //		
 //		//Get u1: "Grohl, Dave", workplace: "Foo Fighters", knownSubjects: (s1, s2, s7)
-//		int evaluator1Dni = users.get(0).getDni();
-//		User evaluator1 = app.getUserByDni(evaluator1Dni, entityManager);
+//		int u1Dni = users.get(0).getDni();
 //		
 //		//assign
-//		Evaluation evaluation1 = app.assingEvaluatorToPaper(evaluator1Dni, p6, d);
-//		if(evaluation1 != null) {
-//			EvaluationDAO.getInstance().persist(evaluation1, entityManager);
-//			evaluations.add(evaluation1);
-//		}
-//		
-//		assertTrue(evaluation1.equals(null));
+//		app.assingEvaluatorToPaper(u1Dni, p6Id);
+		
 //		assertTrue(p6.getEvaluators().isEmpty());
 //		assertTrue(evaluator1.getPapersToEvaluate().isEmpty());
 //		
@@ -448,9 +437,9 @@ public class TestApp {
 //		assertTrue(evaluation2.equals(null));
 //		assertTrue(p5.getEvaluators().isEmpty());
 //		assertTrue(evaluator10.getPapersToEvaluate().isEmpty());
-//		
-//		//Test p5 with u7, should be assigned
-//
+		
+		//Test p5 with u7, should be assigned
+
 //		// Get u7: "Tyler, Steven", workplace: "Aerosmith", knownSubjects: (s6, s8)
 //		int evaluator7Dni = users.get(6).getDni();
 //		User evaluator7 = app.getUserByDni(evaluator7Dni, entityManager);

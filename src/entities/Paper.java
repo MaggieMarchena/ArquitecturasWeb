@@ -35,7 +35,7 @@ public class Paper {
 	@Column(nullable = false)
 	protected String name;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(
 			name = "paper_keyWord",
 			joinColumns = { @JoinColumn(name = "Paper_id") },
@@ -44,33 +44,30 @@ public class Paper {
 	protected List<Subject> keyWords;
 	//protected Set<Subject> keyWords;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(
 			name = "paper_author",
 			joinColumns = { @JoinColumn(name = "Paper_id") },
 			inverseJoinColumns = { @JoinColumn(name = "User_id") }
 		)
 	//protected List<User> authors;
-	protected Set<User> authors;
+	protected List<User> authors;
 	
-	@ManyToMany(cascade=CascadeType.ALL)//(fetch = FetchType.EAGER)
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(
 			name = "paper_evaluator",
 			joinColumns = { @JoinColumn(name = "Paper_id") },
-			inverseJoinColumns = { @JoinColumn(name = "User_id") }
+			inverseJoinColumns = { @JoinColumn(name = "Evaluator_id") }
 		)
 	protected List<User> evaluators;
-	
-	@OneToMany(mappedBy = "paper") //fetch = FetchType.EAGER)
-	protected List<Evaluation> evaluations;
 	
 	public Paper() {
 		super();
 		//this.keyWords = new HashSet<>();
 		this.keyWords = new ArrayList<>();
-		this.authors = new HashSet<>();
+		this.authors = new ArrayList<>();
 		//this.authors = new ArrayList<>();
-		this.evaluations = new ArrayList<>();
+		this.evaluators = new ArrayList<>();
 	}
 	
 	public Paper(String name) {
@@ -110,9 +107,8 @@ public class Paper {
 	/**
 	 * @return the authors
 	 */
-	public Set<User> getAuthors() {
-		return Collections.unmodifiableSet(authors);
-		//return Collections.unmodifiableList(authors);
+	public List<User> getAuthors() {
+		return Collections.unmodifiableList(authors);
 	}
 	
 	public void addAuthor(User author) {
@@ -135,20 +131,6 @@ public class Paper {
 	
 	public void addEvaluator(User evaluator) {
 		this.evaluators.add(evaluator);
-	}
-
-	/**
-	 * @return the evaluation
-	 */
-	public List<Evaluation> getEvaluations() {
-		return this.evaluations;
-	}
-
-	/**
-	 * @param evaluation the evaluation to set
-	 */
-	public void addEvaluation(Evaluation evaluation) {
-		this.evaluations.add(evaluation);
 	}
 	
 	public boolean evaluatorsNotFull() {
